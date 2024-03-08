@@ -6,14 +6,26 @@ import { createServer } from "node:http";
 
 const port = process.env.PORT || 3000;
 
-const app = express();
-app.use(logger('dev'))
+const app = express()
 const server = createServer(app);
 const io = new Server(server)
 
-io.on('connection', () => {
+//Conexion con el websocket
+io.on('connection', (socket) => {
     console.log('a user has connected')
+
+    socket.on('disconnect', () => {
+        console.log('a user has disconnected')
+    })
+
+    socket.on('chat message', (msg) => {
+        console.log('message: ' + msg)
+    })
+    
 });
+
+
+app.use(logger('dev'))
 
 app.get('/', (req, res) => {
     res.sendFile(process.cwd() + '/client/index.html');
