@@ -10,6 +10,9 @@ const app = express()
 const server = createServer(app);
 const io = new Server(server)
 
+//Ruta de las imagenes estaticas
+app.use(express.static('public'));
+
 //Conexion con el websocket
 io.on('connection', (socket) => {
     console.log('a user has connected')
@@ -18,8 +21,8 @@ io.on('connection', (socket) => {
         console.log('a user has disconnected')
     })
 
-    socket.on('chat message', (msg) => {
-        console.log('message: ' + msg)
+    socket.on('chat message', (message) => {
+        io.emit('chat message', message)
     })
     
 });
