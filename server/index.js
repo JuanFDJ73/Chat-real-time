@@ -36,16 +36,30 @@ io.on('connection', (socket) => {
     })
 
     socket.on('chat message', (message) => {
-        // Guardar el mensaje en Firestore
-        console.log(message)
-        const mensajesCollection = collection(db, 'mensajes');
-
+        console.log(message);
+        //Prueba, se hara algun Id por medio de Localstorage
+        // const userId = localStorage.getItem('userId');
+        // if (!userId) {
+        //     console.error('UserId no encontrado en el localStorage');
+        //     return;
+        // }
+        const userId = "userId";
+        console.log('userId: ' + userId);
+        // contactoID sera el Id del chat del usuario(tendre su imagen, nombre y el chat en cuestion)
+        // const contactoId = socket.id;
+        const contactoId = "contactoId";
+        const usuario = "UsuarioPrueba"
+        // Guardar el mensaje en Firestore (Estructura: mensajes/usuario/contacto)
+        const mensajesCollection = collection(db, `mensajes/${userId}/${contactoId}`);
+    
         const nuevoMensaje = {
             texto: message,
-            usuario: "message.usuario",
+            usuario: usuario,
+            //Sacar la imagen del Id del contacto
+            image: "Ruta de la imagen",
             timestamp: new Date()
         };
-
+    
         addDoc(mensajesCollection, nuevoMensaje)
             .then((docRef) => {
                 console.log('Mensaje guardado en Firestore con ID: ', docRef.id);
@@ -53,8 +67,9 @@ io.on('connection', (socket) => {
             .catch((error) => {
                 console.error('Error al guardar mensaje en Firestore: ', error);
             });
-        io.emit('chat message', message)
-    })
+        // Emitir el mensaje a todos los usuarios conectados
+        io.emit('chat message', message);
+    });
 
 });
 
