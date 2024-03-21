@@ -35,18 +35,11 @@ io.on('connection', (socket) => {
         console.log('a user has disconnected')
     })
 
-    socket.on('chat message', (message) => {
+    socket.on('chat message', (message, userId) => {
         console.log(message);
-        //Prueba, se hara algun Id por medio de Localstorage
-        // const userId = localStorage.getItem('userId');
-        // if (!userId) {
-        //     console.error('UserId no encontrado en el localStorage');
-        //     return;
-        // }
-        const userId = "userId";
-        console.log('userId: ' + userId);
+        console.log("userId: " + userId);
+
         // contactoID sera el Id del chat del usuario(tendre su imagen, nombre y el chat en cuestion)
-        // const contactoId = socket.id;
         const contactoId = "contactoId";
         const usuario = "UsuarioPrueba"
         // Guardar el mensaje en Firestore (Estructura: mensajes/usuario/contacto)

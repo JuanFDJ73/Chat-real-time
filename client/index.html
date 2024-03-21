@@ -176,6 +176,11 @@
         const messageInput = document.getElementById('message');
         const messageContainer = document.getElementById('message-container');
 
+            // Asignar un UserId al localStorage si no existe
+        if (!localStorage.getItem('UserId')) {
+            localStorage.setItem('UserId', 'userIdprueba');
+        }
+
         socket.on('chat message', (message) => {
             displayMessageR(message);
             // displayMessageL(message);
@@ -187,8 +192,9 @@
 
             if (messageInput.value) {
                 const message = messageInput.value;
+                const userId = localStorage.getItem('UserId'); // Obtener userId de localStorage
                 // Enviamos el mensaje al servidor
-                socket.emit('chat message', message);
+                socket.emit('chat message', message, userId);
                 messageInput.value = '';
                 scrollToBottom(); // Aseguramos que el scroll se mueva hacia el último mensaje
             }
