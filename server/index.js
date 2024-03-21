@@ -25,15 +25,29 @@ dotenv.config();
 app.use(express.static('public'));
 
 //Conexion con el websocket
-io.on('connection', (socket) => {
-    /////////////////////////////////////////////
-    // Realizar el guardado en el localStorage //
-    /////////////////////////////////////////////
+io.on('connection', async (socket) => {
     console.log('a user has connected')
 
     socket.on('disconnect', () => {
         console.log('a user has disconnected')
     })
+    
+    // Recuperar mensajes del usuario desde Firestore
+    // const userId = localStorage.getItem('UserId');
+    const userId = "userIdprueba";
+    const contactoId = "contactoId";
+
+    const mensajesCollection = collection(db, `mensajes/${userId}/${contactoId}`);
+    const querySnapshot = await getDocs(mensajesCollection);
+
+    // Ordenar los mensajes por fecha
+    const mensajesOrdenados = querySnapshot.docs.map(doc => doc.data()).sort((a, b) => a.timestamp - b.timestamp);
+
+    // Enviar los mensajes ordenados al cliente
+    mensajesOrdenados.forEach(mensaje => {
+        socket.emit('chat message', mensaje.texto);
+    });
+
 
     socket.on('chat message', (message, userId) => {
         console.log(message);
@@ -61,7 +75,7 @@ io.on('connection', (socket) => {
                 console.error('Error al guardar mensaje en Firestore: ', error);
             });
         // Emitir el mensaje a todos los usuarios conectados
-        io.emit('chat message', message);
+        io.emit('chat message', message, emisor);
     });
 
 });
