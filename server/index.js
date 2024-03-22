@@ -37,15 +37,25 @@ io.on('connection', async (socket) => {
     const userId = "userIdprueba";
     const contactoId = "contactoId";
 
-    const mensajesCollection = collection(db, `mensajes/${userId}/${contactoId}`);
-    const querySnapshot = await getDocs(mensajesCollection);
-
-    // Ordenar los mensajes por fecha
-    const mensajesOrdenados = querySnapshot.docs.map(doc => doc.data()).sort((a, b) => a.timestamp - b.timestamp);
-
+    const mensajesCollection1 = collection(db, `mensajes/${userId}/${contactoId}`);
+    const mensajesCollection2 = collection(db, `mensajes/${contactoId}/${userId}`);
+    
+    const querySnapshot1 = await getDocs(mensajesCollection1);
+    const querySnapshot2 = await getDocs(mensajesCollection2);
+    
+    // Extraer los mensajes de ambas colecciones
+    const mensajes1 = querySnapshot1.docs.map(doc => ({...doc.data(), collection: 'mensajesCollection1'}));
+    const mensajes2 = querySnapshot2.docs.map(doc => ({...doc.data(), collection: 'mensajesCollection2'}));
+    
+    // Combinar los mensajes en un solo array
+    const mensajesCombinados = [...mensajes1, ...mensajes2];
+    
+    // Ordenar los mensajes combinados por fecha
+    const mensajesOrdenados = mensajesCombinados.sort((a, b) => a.timestamp - b.timestamp);
+    
     // Enviar los mensajes ordenados al cliente
     mensajesOrdenados.forEach(mensaje => {
-        socket.emit('chat message', mensaje.texto);
+        socket.emit('chat message', mensaje.texto, mensaje.userId);
     });
 
 
@@ -62,10 +72,11 @@ io.on('connection', async (socket) => {
         const nuevoMensaje = {
             texto: message,
             usuario: usuario,
-            //Sacar la imagen del Id del contacto
+            userId: userId, // ID del remitente
+            contactoId: contactoId, // ID del destinatario
             image: "Ruta de la imagen",
             timestamp: new Date()
-        };
+        };        
     
         addDoc(mensajesCollection, nuevoMensaje)
             .then((docRef) => {
@@ -75,7 +86,7 @@ io.on('connection', async (socket) => {
                 console.error('Error al guardar mensaje en Firestore: ', error);
             });
         // Emitir el mensaje a todos los usuarios conectados
-        io.emit('chat message', message, emisor);
+        io.emit('chat message', message, userId);
     });
 
 });

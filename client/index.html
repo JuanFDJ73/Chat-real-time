@@ -42,7 +42,7 @@
             align-items: flex-start;
         }
         
-        .message {
+        .message-right {
             padding: 10px;
             background-color: #e0e0e0; /* Color de fondo para los mensajes */
             border-radius: 10px; /* Mensajes con bordes redondeados */
@@ -182,9 +182,8 @@
             localStorage.setItem('UserId', 'userIdprueba');
         }
 
-        socket.on('chat message', (message) => {
-            displayMessageR(message);
-            // displayMessageL(message);
+        socket.on('chat message', (message, userId) => {
+            displayMessage(message, userId);
             scrollToBottom();
         })
 
@@ -203,19 +202,16 @@
 
 
         //Funcion para que aparezca el mernsaje en el Chat
-        function displayMessageR(message) {
+        function displayMessage(message, userId) {
+            console.log ("Pruebas con displayMessage" + userId)
             const messageElement = document.createElement('div');
-
             messageElement.textContent = message;
-            messageElement.classList.add('message');
-            messageContainer.insertAdjacentElement('afterBegin', messageElement);
-        }
 
-        function displayMessageL(message) {
-            const messageElement = document.createElement('div');
-
-            messageElement.textContent = message;
-            messageElement.classList.add('message-left');
+            if (userId === localStorage.getItem('UserId')) {
+                messageElement.classList.add('message-right');
+            } else {
+                messageElement.classList.add('message-left');    
+            }
             messageContainer.insertAdjacentElement('afterBegin', messageElement);
         }
 
