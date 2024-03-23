@@ -177,9 +177,26 @@
         const messageInput = document.getElementById('message');
         const messageContainer = document.getElementById('message-container');
 
-            // Asignar un UserId al localStorage si no existe
+        // Llamar a la función al cargar la página
+        window.onload = function() {
+            setCookie();
+        };
+
+        // Asignar un UserId al localStorage si no existe
         if (!localStorage.getItem('UserId')) {
             localStorage.setItem('UserId', 'userIdprueba');
+        }
+
+        function setCookie() {
+            fetch('/set-cookie')
+            .then(response => {
+                if (response.ok) {
+                    console.log("La cookie ha sido establecida por el servidor");
+                }
+            })
+            .catch(error => {
+                console.error('Error al establecer la cookie: ', error);
+            });
         }
 
         socket.on('chat message', (message, userId) => {

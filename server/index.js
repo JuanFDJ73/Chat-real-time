@@ -1,6 +1,8 @@
 import express from "express";
 import logger from "morgan";
 import dotenv from "dotenv";
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
 
 import { Server } from "socket.io";
 import { createServer } from "node:http";
@@ -8,9 +10,11 @@ import { createServer } from "node:http";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
 
+
 const port = process.env.PORT || 3000;
 
-const app = express()
+const app = express();
+app.use(cookieParser());
 const server = createServer(app);
 const io = new Server(server, {
     connectionStateRecovery: {
@@ -111,6 +115,17 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 const db = getFirestore(firebaseApp);
 
+app.get('/set-cookie', (req, res) => {
+    const userId = "userIdPrueba";
+    const secretKey = process.env.SECRET_KEY
+  
+    // Crear el JWT
+    const token = jwt.sign({ userId: userId }, secretKey, { expiresIn: '30d' }); 
+  
+    // Enviar el JWT en una cookie
+    res.cookie('jwtChatOp', token);
+    res.send('JWT enviado en una cookie');
+});
 
 server.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
