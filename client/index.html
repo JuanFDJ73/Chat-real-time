@@ -37,12 +37,12 @@
             padding: 10px;
             display: flex;
             flex-direction: column-reverse;
-            direction: rtl; /* Dirección del texto de derecha a izquierda */
             gap: 10px;
             align-items: flex-start;
         }
         
         .message-right {
+            align-self: end;
             padding: 10px;
             background-color: #e0e0e0; /* Color de fondo para los mensajes */
             border-radius: 10px; /* Mensajes con bordes redondeados */
@@ -52,7 +52,7 @@
         }
 
         .message-left {
-            align-self: end; /* Alinea los mensajes a la izquierda */
+            align-self: flex-start; /* Alinea los mensajes a la izquierda */
             padding: 10px;
             background-color: #e0e0e0; /* Color de fondo para los mensajes */
             border-radius: 10px; /* Mensajes con bordes redondeados */
@@ -182,13 +182,8 @@
             setCookie();
         };
 
-        // Asignar un UserId al localStorage si no existe
-        if (!localStorage.getItem('UserId')) {
-            localStorage.setItem('UserId', 'userIdprueba');
-        }
-
         function setCookie() {
-            fetch('/set-cookie')
+            fetch('/api/set-cookie')
             .then(response => {
                 if (response.ok) {
                     console.log("La cookie ha sido establecida por el servidor");
@@ -209,7 +204,8 @@
 
             if (messageInput.value) {
                 const message = messageInput.value;
-                const userId = localStorage.getItem('UserId'); // Obtener userId de localStorage
+                const userId = "userIdprueba";
+                console.log('Prueba: ',userId);
                 // Enviamos el mensaje al servidor
                 socket.emit('chat message', message, userId);
                 messageInput.value = '';
@@ -224,7 +220,7 @@
             const messageElement = document.createElement('div');
             messageElement.textContent = message;
 
-            if (userId === localStorage.getItem('UserId')) {
+            if (userId === "userIdprueba") {
                 messageElement.classList.add('message-right');
             } else {
                 messageElement.classList.add('message-left');    
