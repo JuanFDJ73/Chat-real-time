@@ -13,8 +13,8 @@ router.get('/api/set-cookie', (req, res) => {
     // Crear el JWT
     const token = jwt.sign({ userId: userId }, secretKey, { expiresIn: '30d' });
 
-    // Enviar el JWT en una cookie (configurar httponly y secure despues)
-    res.cookie('jwtChatOp', token); // Opciones recomendadas para cookies
+    // Enviar el JWT en una cookie (configurar httponly y secure despues) // Opciones recomendadas para cookies
+    res.cookie('jwtChatOp', token); 
     res.send('JWT enviado en una cookie');
 });
 

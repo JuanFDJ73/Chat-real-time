@@ -18,10 +18,76 @@
             background-color: #f4f7f6;
         }
 
+        .user-contact {
+            display: inline-block; /* O cualquier otro estilo que necesites */
+            margin-right: 10px; /* Espacio entre el texto y el botón */
+        }
+
+        #toggleVisibilityButton {
+            cursor: pointer; /* Hacer saber al usuario que es clickeable */
+            border: none; /* Quita el borde del botón */
+            background: transparent; /* fondo transparente */
+        }
+
+        .user{
+            margin-right: 2%;
+            margin-left: 2%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /* background-color: blueviolet; */
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* evitar desbordamientos */
+        }
+
+        .menu-container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 20%;
+            height: 85vh;
+            background-color: #ec5b5b;
+            border: 1px solid #ddd;
+            overflow: hidden; /* evitar desbordamientos */
+        }
+
+        .opcions-container{
+            display: flex;
+            padding: 1% 1% 1% 1%;
+            width: 100%;
+            height: 14%;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: #f4f7f6;
+        }
+
+        .contacts-menu{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100px;
+            background-color: #f4f7f6;
+            border: 1px solid #ddd;
+            overflow: auto;
+
+        }
+
+        .contacts{
+            width: 100%;
+            height: calc(85vh-100px);
+            background-color: lightblue;
+            overflow-y: auto;
+        }
+
         #chat {
-            width: 95%;
-            max-width: 320px; /* Tamaño similar al de un celular */
-            height: 600px; /* Altura fija para simular un celular */
+            width: 80%;
+            max-width: 600px; /* Tamaño similar al de un celular */
+            height: 85vh;
             border: 1px solid #ddd;
             background-color: #fff;
             border-radius: 5px;/* Bordes redondeados */
@@ -40,7 +106,7 @@
             gap: 10px;
             align-items: flex-start;
         }
-        
+
         .message-right {
             align-self: end;
             padding: 10px;
@@ -63,7 +129,7 @@
 
 
 
-        /* 
+        /*
             /////////////////////////////////////////
             // Estilos para la barra de navegación //
             /////////////////////////////////////////
@@ -85,7 +151,7 @@
             flex-basis: content;
             background-color: #B4F1FF;
             width: auto;
-            height: 10vh;
+            max-height: 10vh;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra en la parte inferior */
         }
 
@@ -101,14 +167,14 @@
             height: 100%;
             object-fit: contain;
         }
-        
+
         .icon {
             display: flex;
             align-items: center;
             justify-content: center;
             /* background-color: blueviolet; */
-            width: 22%; 
-            height: 100%; 
+            width: 10%;
+            height: 100%;
             overflow: hidden; /* evitar desbordamientos */
         }
 
@@ -127,7 +193,7 @@
 
         .nombre-contact{
             margin-left: 5px;
-            width: 68%;
+            width: 70%;
             height: auto;
             /* background-color: aquamarine; */
         }
@@ -194,9 +260,22 @@
             });
         }
 
+        function saveMessage() {
+            fetch('/api/save-message')
+            .then(response => {
+                if (response.ok) {
+                    console.log("Mensaje guardado en el servidor");
+                }
+            })
+            .catch(error => {
+                console.error('Error al guardar en el servidor: ', error);
+            });
+        }
+
         socket.on('chat message', (message, userId) => {
             displayMessage(message, userId);
             scrollToBottom();
+            displayContactButton(userId)
         })
 
         form.addEventListener('submit', function (e) {
@@ -223,7 +302,7 @@
             if (userId === "userIdprueba") {
                 messageElement.classList.add('message-right');
             } else {
-                messageElement.classList.add('message-left');    
+                messageElement.classList.add('message-left');
             }
             messageContainer.insertAdjacentElement('afterBegin', messageElement);
         }
@@ -231,9 +310,75 @@
         function scrollToBottom() {
             messageContainer.scrollTop = messageContainer.scrollHeight;
         }
-        
+
+        //Funcion para que se oculte el UserID (Prueba)
+        document.getElementById("toggleVisibilityButton").addEventListener("click", function() {
+            const userIdContent = document.getElementById("userIdContent");
+            if (userIdContent.dataset.visible === "true") {
+                // Ocultar contenido
+                userIdContent.textContent = "UserId: ************";
+                userIdContent.dataset.visible = "false";
+            } else {
+                // Mostrar contenido
+                userIdContent.textContent = "UserId: userIdprueba";
+                userIdContent.dataset.visible = "true";
+            }
+        });
+
+        //Funcion para crear los contactos
+        function createContactButton(contactId) {
+            const button = document.createElement('button');
+            button.classList.add('contacts-menu');
+            button.dataset.contactId = contactId;
+            button.addEventListener('click', function() {
+                const contactId = this.dataset.contactId;
+                // Hacer el fetch con contactId
+                fetch('/api/prueba', {
+                    method: 'POST',
+                    body: JSON.stringify({ contactId }), // Convertir contactId en JSON
+                    headers: {
+                        'Content-Type': 'application/json' // Establecer tipo de contenido JSON
+                    }
+                }).then(response => {
+                    // Manejar la respuesta del fetch
+                }).catch(error => {
+                    // Manejar el error del fetch
+                });
+            });
+            return button;
+        }
+
+
+        function displayContactButton(contactId) {
+            const button = createContactButton(contactId);
+            document.getElementById('contacts').appendChild(button);
+        }
+
 
     </script>
+
+    <section id="menu-container" class="menu-container">
+            <!-- Diseño en modo prueba -->
+        <div id="opcions-container" class="opcions-container">
+            <!-- <div id="icon-profile" class="icon-profile">
+                <img src="/perfil.png" alt="icono">
+            </div> -->
+            <div id="user" class="user">
+                <div id="user-contact" class="user-contact">
+                    <h4 id="userIdContent" data-visible="false">UserId: ************</h4> <!-- Añade el id y data-visible aquí -->
+                </div>
+                <button id="toggleVisibilityButton">👁️</button>
+                <!-- <div id="user-name" class="user-name">
+                    <h3>Name: Juan</h3>
+                </div> -->
+            </div>
+        </div>
+        <div id="contacts" class="contacts">
+            <!-- Contactos aparecerán aquí -->
+            <button class="contacts-menu"></button>
+            <button class="contacts-menu"></button>
+        </div>
+    </section>
 
     <section id="chat">
         <div id="contact-container" class="contact-container">
@@ -247,7 +392,7 @@
                 <h1>ChatOp</h1>
             </div>
             <!-- Contacto aparecerán aquí -->
-            
+
         </div>
         <div id="message-container" class="message-container">
             <!-- Los mensajes aparecerán aquí -->
