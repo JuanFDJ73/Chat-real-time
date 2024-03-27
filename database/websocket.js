@@ -1,6 +1,5 @@
-import { collection, getDocs, addDoc } from "firebase/firestore";
 import jwt from 'jsonwebtoken'; 
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
 
 ////////////////////////////////
@@ -17,9 +16,12 @@ export default function initializeWebSocket(io, db) {
         })
     
         // Recuperar mensajes del usuario desde Firestore
-        const token = socket.handshake.headers.cookie.split('=')[1]; // Obtener el token de la cookie
+        let token;
+        if (socket.handshake.headers.cookie) {
+            token = socket.handshake.headers.cookie.split('=')[1]; // Obtener el token de la cookie
+        }
+
         let userId;
-    
         try {
             const decoded = jwt.verify(token, process.env.SECRET_KEY);
             userId = decoded.userId;
@@ -30,27 +32,27 @@ export default function initializeWebSocket(io, db) {
         ///////////////////////////////////
         // const contactoId = "contactoId";
         ///////////////////////////////////
-        const contactoId = contactoPrueba
-        const mensajesCollection1 = collection(db, `mensajes/${userId}/${contactoId}`);
-        const mensajesCollection2 = collection(db, `mensajes/${contactoId}/${userId}`);
+        // const contactoId = contactoPrueba
+        // const mensajesCollection1 = collection(db, `mensajes/${userId}/${contactoId}`);
+        // const mensajesCollection2 = collection(db, `mensajes/${contactoId}/${userId}`);
     
-        const querySnapshot1 = await getDocs(mensajesCollection1);
-        const querySnapshot2 = await getDocs(mensajesCollection2);
+        // const querySnapshot1 = await getDocs(mensajesCollection1);
+        // const querySnapshot2 = await getDocs(mensajesCollection2);
     
-        // Extraer los mensajes de ambas colecciones
-        const mensajes1 = querySnapshot1.docs.map(doc => ({ ...doc.data(), collection: 'mensajesCollection1' }));
-        const mensajes2 = querySnapshot2.docs.map(doc => ({ ...doc.data(), collection: 'mensajesCollection2' }));
+        // // Extraer los mensajes de ambas colecciones
+        // const mensajes1 = querySnapshot1.docs.map(doc => ({ ...doc.data(), collection: 'mensajesCollection1' }));
+        // const mensajes2 = querySnapshot2.docs.map(doc => ({ ...doc.data(), collection: 'mensajesCollection2' }));
     
-        // Combinar los mensajes en un solo array
-        const mensajesCombinados = [...mensajes1, ...mensajes2];
+        // // Combinar los mensajes en un solo array
+        // const mensajesCombinados = [...mensajes1, ...mensajes2];
     
-        // Ordenar los mensajes combinados por fecha
-        const mensajesOrdenados = mensajesCombinados.sort((a, b) => a.timestamp - b.timestamp);
+        // // Ordenar los mensajes combinados por fecha
+        // const mensajesOrdenados = mensajesCombinados.sort((a, b) => a.timestamp - b.timestamp);
     
-        // Enviar los mensajes ordenados al cliente
-        mensajesOrdenados.forEach(mensaje => {
-            socket.emit('chat message', mensaje.texto, mensaje.userId);
-        });
+        // // Enviar los mensajes ordenados al cliente
+        // mensajesOrdenados.forEach(mensaje => {
+        //     socket.emit('chat message', mensaje.texto, mensaje.userId);
+        // });
     
     
         socket.on('chat message', (message, userId) => {
@@ -75,9 +77,10 @@ export default function initializeWebSocket(io, db) {
                 timestamp: new Date()
             };
     
-            addDoc(mensajesCollection, nuevoMensaje)
-                .then((docRef) => {
-                    console.log('Mensaje guardado en Firestore con ID: ', docRef.id);
+            const mensajeDoc = doc(mensajesCollection);
+            setDoc(mensajeDoc, nuevoMensaje)
+                .then(() => {
+                    console.log('Mensaje guardado en Firestore');
                 })
                 .catch((error) => {
                     console.error('Error al guardar mensaje en Firestore: ', error);

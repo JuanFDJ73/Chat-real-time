@@ -246,6 +246,7 @@
         // Llamar a la función al cargar la página
         window.onload = function() {
             setCookie();
+            setContacts();
         };
 
         function setCookie() {
@@ -258,6 +259,31 @@
             .catch(error => {
                 console.error('Error al establecer la cookie: ', error);
             });
+        }
+
+        function setContacts() {
+            fetch('/api/contacts')
+
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                if (data) {
+                    data.forEach(contact => {
+                        const contactContainer = document.createElement('div');
+                        contactContainer.classList.add('contact-container');
+                        // const icon = document.createElement('div');
+                        // icon.classList.add('icon');
+                        const nombreContact = document.createElement('h1');
+                        nombreContact.textContent = contact.name;
+                        // contactContainer.appendChild(icon);
+                        contactContainer.appendChild(nombreContact);
+                        document.getElementById('contacts').appendChild(contactContainer);
+                    });
+                }
+            })
         }
 
         function saveMessage() {
@@ -275,7 +301,7 @@
         socket.on('chat message', (message, userId) => {
             displayMessage(message, userId);
             scrollToBottom();
-            displayContactButton(userId)
+            displayContactButton(userId) // Prueba eliminar
         })
 
         form.addEventListener('submit', function (e) {
@@ -353,7 +379,6 @@
             const button = createContactButton(contactId);
             document.getElementById('contacts').appendChild(button);
         }
-
 
     </script>
 
