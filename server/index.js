@@ -12,6 +12,7 @@ import { createServer } from "node:http";
 //Rutas
 import cookieRoutes from "../routes/cookie.routes.js";
 import contactsRoutes from "../routes/contacts.routes.js";
+import messageRoutes from "../routes/message.routes.js";
 import initializeWebSocket from "../database/websocket.js";
 
 import db from "../database/db.js";
@@ -47,6 +48,7 @@ initializeWebSocket(io, db);
 //Rutas
 app.use(cookieRoutes);
 app.use(contactsRoutes);
+app.use(messageRoutes);
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 

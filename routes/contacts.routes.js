@@ -2,7 +2,7 @@ import express from "express";
 import jwt from 'jsonwebtoken'; 
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import dbAdmin from "../database/db.js";
+import db from "../database/db.js";
 
 dotenv.config();
 
@@ -19,7 +19,7 @@ router.post('/api/prueba', function(req, res) {
         console.log('Prueba api, userid',userId , 'contacId', contactId);
         res.status(contactId)
     } catch(error){
-        res.status(400).send('api, funcionando');
+        res.status(500).send('Error: ' + error);
     }
 });
 
@@ -30,7 +30,7 @@ router.get('/api/contacts', async function(req, res) {
         const userId = decoded.userId;
         const database = process.env.DB_NAME;
         
-        const userDocRef = dbAdmin.doc(`${database}/${userId}`);
+        const userDocRef = db.doc(`${database}/${userId}`);
 
         const collections = await userDocRef.listCollections();
         const collectionNames = collections.map(collection => collection.id);

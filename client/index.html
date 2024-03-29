@@ -271,16 +271,24 @@
             })
             .then(data => {
                 if (data) {
-                    data.forEach(contact => {
-                        const contactContainer = document.createElement('div');
-                        contactContainer.classList.add('contact-container');
-                        // const icon = document.createElement('div');
-                        // icon.classList.add('icon');
-                        const nombreContact = document.createElement('h1');
-                        nombreContact.textContent = contact.name;
-                        // contactContainer.appendChild(icon);
-                        contactContainer.appendChild(nombreContact);
-                        document.getElementById('contacts').appendChild(contactContainer);
+                    data.forEach(contactId => {
+                        const button = document.createElement('button');
+                        button.classList.add('contacts-menu');
+                        button.textContent = contactId;
+                        button.addEventListener('click', function() {
+                            fetch('/api/prueba', {
+                                method: 'POST',
+                                body: JSON.stringify({ contactId }),
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }).then(response => {
+                                // Manejar la respuesta del fetch
+                            }).catch(error => {
+                                // Manejar el error del fetch
+                            });
+                        });
+                        document.getElementById('contacts').appendChild(button);
                     });
                 }
             })
