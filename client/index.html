@@ -247,6 +247,7 @@
         window.onload = function() {
             setCookie();
             setContacts();
+            // recoverMessages();
         };
 
         function setCookie() {
@@ -263,53 +264,67 @@
 
         function setContacts() {
             fetch('/api/contacts')
-
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-            })
-            .then(data => {
-                if (data) {
-                    data.forEach(contactId => {
-                        const button = document.createElement('button');
-                        button.classList.add('contacts-menu');
-                        button.textContent = contactId;
-                        button.addEventListener('click', function() {
-                            fetch('/api/prueba', {
-                                method: 'POST',
-                                body: JSON.stringify({ contactId }),
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).then(response => {
-                                // Manejar la respuesta del fetch
-                            }).catch(error => {
-                                // Manejar el error del fetch
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Falló la solicitud al servidor para obtener los contactos.');
+                })
+                .then(data => {
+                    if (data && data.length) {
+                        data.forEach(contactId => {
+                            const button = document.createElement('button');
+                            button.classList.add('contacts-menu');
+                            button.textContent = contactId;
+                            button.addEventListener('click', function() {
+                                fetch('/api/button', {
+                                    method: 'POST',
+                                    body: JSON.stringify({ contactId }),
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                })
+                                .then(response => {
+                                    if (response.ok) {
+                                        return response.json();
+                                    }
+                                    throw new Error('Falló la solicitud al servidor para obtener mensajes.');
+                                })
+                                .then(messages => {
+                                    // MOSTRAR MENSAJES
+                                    console.log(messages);
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
                             });
+                            document.getElementById('contacts').appendChild(button);
                         });
-                        document.getElementById('contacts').appendChild(button);
-                    });
-                }
-            })
+                    } else {
+                        console.log('No hay contactos disponibles.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al recuperar los contactos:', error);
+                });
         }
 
-        function saveMessage() {
-            fetch('/api/save-message')
-            .then(response => {
-                if (response.ok) {
-                    console.log("Mensaje guardado en el servidor");
-                }
-            })
-            .catch(error => {
-                console.error('Error al guardar en el servidor: ', error);
-            });
-        }
+
+        // function recoverMessages() {
+        //     fetch('/api/messages')
+        //     .then(response => {
+        //         if (response.ok) {
+        //             return response.json();
+        //         }
+        //     })
+        //     }
+
+
 
         socket.on('chat message', (message, userId) => {
             displayMessage(message, userId);
             scrollToBottom();
-            displayContactButton(userId) // Prueba eliminar
+            displayContactButton(userId) // Cambiar, Prueba
         })
 
         form.addEventListener('submit', function (e) {
@@ -393,23 +408,17 @@
     <section id="menu-container" class="menu-container">
             <!-- Diseño en modo prueba -->
         <div id="opcions-container" class="opcions-container">
-            <!-- <div id="icon-profile" class="icon-profile">
-                <img src="/perfil.png" alt="icono">
-            </div> -->
             <div id="user" class="user">
                 <div id="user-contact" class="user-contact">
                     <h4 id="userIdContent" data-visible="false">UserId: ************</h4> <!-- Añade el id y data-visible aquí -->
                 </div>
                 <button id="toggleVisibilityButton">👁️</button>
-                <!-- <div id="user-name" class="user-name">
-                    <h3>Name: Juan</h3>
-                </div> -->
             </div>
         </div>
         <div id="contacts" class="contacts">
             <!-- Contactos aparecerán aquí -->
-            <button class="contacts-menu"></button>
-            <button class="contacts-menu"></button>
+            <button class="contacts-menu"></button> <!--Eliminar, son Prueba-->
+            <button class="contacts-menu"></button> <!--Eliminar, son Prueba-->
         </div>
     </section>
 

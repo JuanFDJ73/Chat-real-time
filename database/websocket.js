@@ -36,9 +36,6 @@ export default function initializeWebSocket(io, db) {
             console.log("userId: " + userId);
     
             // contactoID sera el Id del chat del usuario(tendre su imagen, nombre y el chat en cuestion)
-            ///////////////////////////////////
-            // const contactoId = "contactoId";
-            ///////////////////////////////////
             const contactoId = contactoPrueba
             const usuario = "UsuarioPrueba"
             
