@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'; 
 import dotenv from 'dotenv';
 import admin from 'firebase-admin';
+import db from "../database/db.js";
 dotenv.config();
 
 ////////////////////////////////
@@ -30,7 +31,27 @@ export default function initializeWebSocket(io, db) {
             console.error('Error decoding token:', err);
             return; // Si hay un error, terminar la ejecución
         }
+
+        const contactId = contactoPrueba
+
+        console.log(`Consultando mensajes del usuario ${userId} para el contacto ${contactId}`);
+
+        const mensajesUsuarioQuery = db.collection(`mensajes/${userId}/${contactId}`).orderBy("timestamp");
+        const mensajesContactoQuery = db.collection(`mensajes/${contactId}/${userId}`).orderBy("timestamp");
+
+        const messageUsuarioSnap = await mensajesUsuarioQuery.get();
+        const messageContactoSnap = await mensajesContactoQuery.get();
+
+        let message = [];
+        messageUsuarioSnap.forEach(doc => message.push({ id: doc.id, ...doc.data() }));
+        messageContactoSnap.forEach(doc => message.push({ id: doc.id, ...doc.data() }));
+
+        message.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
+
+        console.log (message);
+        socket.emit('chat messages', message, userId);
     
+
         socket.on('chat message', (message, userId) => {
             console.log(message);
             console.log("userId: " + userId);

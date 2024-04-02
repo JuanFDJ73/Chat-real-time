@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import { query, collection, orderBy, getDocs } from "firebase/firestore";
 import db from "../database/db.js";
 
-dotenv.config();
+dotenv.config(); 
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -23,9 +23,9 @@ router.post('/api/button', async function(req, res) {
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
         const userId = decoded.userId;
 
-        const mensajesUsuarioQuery = query(collection(db, `mensajes/${userId}/${contactoId}`), orderBy("timestamp"));
-        const mensajesContactoQuery = query(collection(db, `mensajes/${contactoId}/${userId}`), orderBy("timestamp"));
-
+        const mensajesUsuarioQuery = db.collection(`mensajes/${userId}/${contactId}`).orderBy("timestamp");
+        const mensajesContactoQuery = db.collection(`mensajes/${contactId}/${userId}`).orderBy("timestamp");
+        
         //Recuperar los mensajes
         const [mensajesUsuarioSnap, mensajesContactoSnap] = await Promise.all([
             getDocs(mensajesUsuarioQuery),
@@ -41,8 +41,8 @@ router.post('/api/button', async function(req, res) {
         mensajes.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
 
         // Responder con los mensajes ordenados
+        io.emit('chat message', mensajes, userId);
         res.status(200).json(mensajes);
-        res.status(contactId);
     } catch(error){
         console.error('Error al recuperar y ordenar mensajes:', error);
         res.status(500).send('Ocurrió un error al procesar su solicitud.');

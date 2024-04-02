@@ -321,11 +321,14 @@
 
 
 
-        socket.on('chat message', (message, userId) => {
-            displayMessage(message, userId);
-            scrollToBottom();
-            displayContactButton(userId) // Cambiar, Prueba
-        })
+        socket.on('chat messages', (messages, userId) => {
+            messages.forEach(message => {
+                // Para cada mensaje recibido, mostrarlo en el chat
+                displayMessage(message.texto, message.userId);
+                scrollToBottom();
+                displayContactButton(userId);
+            });
+        });
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -354,7 +357,7 @@
                 messageElement.classList.add('message-left');
             }
             messageContainer.insertAdjacentElement('afterBegin', messageElement);
-        }
+        }w
 
         function scrollToBottom() {
             messageContainer.scrollTop = messageContainer.scrollHeight;
