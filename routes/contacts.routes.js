@@ -2,7 +2,6 @@ import express from "express";
 import jwt from 'jsonwebtoken'; 
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import { query, collection, orderBy, getDocs } from "firebase/firestore";
 import db from "../database/db.js";
 
 dotenv.config(); 
@@ -25,24 +24,17 @@ router.post('/api/button', async function(req, res) {
 
         const mensajesUsuarioQuery = db.collection(`mensajes/${userId}/${contactId}`).orderBy("timestamp");
         const mensajesContactoQuery = db.collection(`mensajes/${contactId}/${userId}`).orderBy("timestamp");
-        
-        //Recuperar los mensajes
-        const [mensajesUsuarioSnap, mensajesContactoSnap] = await Promise.all([
-            getDocs(mensajesUsuarioQuery),
-            getDocs(mensajesContactoQuery)
-        ]);
 
-        // Combinar los mensajes
-        let mensajes = [];
-        mensajesUsuarioSnap.forEach(doc => mensajes.push({ id: doc.id, ...doc.data() }));
-        mensajesContactoSnap.forEach(doc => mensajes.push({ id: doc.id, ...doc.data() }));
+        const messageUsuarioSnap = await mensajesUsuarioQuery.get();
+        const messageContactoSnap = await mensajesContactoQuery.get();
 
-        // Ordenar los mensajes por timestamp
-        mensajes.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
+        let message = [];
+        messageUsuarioSnap.forEach(doc => message.push({ id: doc.id, ...doc.data() }));
+        messageContactoSnap.forEach(doc => message.push({ id: doc.id, ...doc.data() }));
 
-        // Responder con los mensajes ordenados
-        io.emit('chat message', mensajes, userId);
-        res.status(200).json(mensajes);
+        message.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
+
+        res.status(200).json(message);
     } catch(error){
         console.error('Error al recuperar y ordenar mensajes:', error);
         res.status(500).send('Ocurrió un error al procesar su solicitud.');

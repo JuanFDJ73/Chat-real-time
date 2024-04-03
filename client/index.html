@@ -292,7 +292,9 @@
                                 })
                                 .then(messages => {
                                     // MOSTRAR MENSAJES
-                                    console.log(messages);
+                                    console.log(messages)
+                                    displayMessage(messages.texto, messages.userId);
+                                    scrollToBottom();
                                 })
                                 .catch(error => {
                                     console.error('Error:', error);
@@ -326,7 +328,8 @@
                 // Para cada mensaje recibido, mostrarlo en el chat
                 displayMessage(message.texto, message.userId);
                 scrollToBottom();
-                displayContactButton(userId);
+
+                // displayContactButton(userId);
             });
         });
 
@@ -357,7 +360,7 @@
                 messageElement.classList.add('message-left');
             }
             messageContainer.insertAdjacentElement('afterBegin', messageElement);
-        }w
+        }
 
         function scrollToBottom() {
             messageContainer.scrollTop = messageContainer.scrollHeight;
