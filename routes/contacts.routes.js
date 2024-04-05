@@ -12,7 +12,7 @@ router.use(bodyParser.json());
 //////////////////////////////////////////////////////////////////
 // Falta: Funcion Boton (Traer chat del contacto seleccionado y colocar el boton seleccionado)
 //////////////////////////////////////////////////////////////////
-router.post('/api/button', async function(req, res) {
+router.post('/api/contact-button', async function(req, res) {
     try{
         const token = req.cookies.jwtChatOp;
         if (!token) {
@@ -33,8 +33,7 @@ router.post('/api/button', async function(req, res) {
         messageContactoSnap.forEach(doc => message.push({ id: doc.id, ...doc.data() }));
 
         message.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
-
-        res.status(200).json(message);
+        res.json(message);
     } catch(error){
         console.error('Error al recuperar y ordenar mensajes:', error);
         res.status(500).send('Ocurrió un error al procesar su solicitud.');

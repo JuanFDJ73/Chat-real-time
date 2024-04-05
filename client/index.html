@@ -247,21 +247,45 @@
         window.onload = function() {
             setCookie();
             setContacts();
-            // recoverMessages();
         };
 
         function setCookie() {
             fetch('/api/set-cookie')
             .then(response => {
                 if (response.ok) {
-                    console.log("La cookie ha sido establecida por el servidor");
+                    return response.json();
                 }
+                throw new Error('Error al recibir el userId');
+            })
+            .then(data => {
+                localStorage.setItem('userId', data.userId);
+                console.log('UserId guardado en localStorage:', data.userId);
+                console.log("La cookie ha sido establecida por el servidor");
             })
             .catch(error => {
                 console.error('Error al establecer la cookie: ', error);
             });
         }
 
+        function cleanChat() {
+            messageInput.value = '';
+            messageContainer.innerHTML = '';
+        }
+
+        function verifyUserId() {
+            fetch('/api/verify-user-id')
+                .then(response =>{
+                    if (response.ok) {
+                        return response.json(); 
+                    }
+                    throw new Error('Error al recibir el userId');
+                })
+                .then(data => {
+                    localStorage.setItem('userId', data.userId);
+                    console.log('UserId guardado en localStorage:', data.userId);
+                })
+        }
+        
         function setContacts() {
             fetch('/api/contacts')
                 .then(response => {
@@ -277,24 +301,24 @@
                             button.classList.add('contacts-menu');
                             button.textContent = contactId;
                             button.addEventListener('click', function() {
-                                fetch('/api/button', {
+                                fetch('/api/contact-button', {
                                     method: 'POST',
                                     body: JSON.stringify({ contactId }),
                                     headers: {
                                         'Content-Type': 'application/json'
                                     }
                                 })
-                                .then(response => {
-                                    if (response.ok) {
-                                        return response.json();
-                                    }
-                                    throw new Error('Falló la solicitud al servidor para obtener mensajes.');
-                                })
+                                .then(response => response.json())
                                 .then(messages => {
-                                    // MOSTRAR MENSAJES
-                                    console.log(messages)
-                                    displayMessage(messages.texto, messages.userId);
-                                    scrollToBottom();
+                                    cleanChat();
+                                    // Iterar a través de cada mensaje y mostrarlo
+                                    messages.forEach(message => {
+                                        console.log(message);
+                                        
+                                        displayMessage(message.texto, message.userId);
+                                        scrollToBottom();
+                                        
+                                    });
                                 })
                                 .catch(error => {
                                     console.error('Error:', error);
@@ -311,25 +335,11 @@
                 });
         }
 
-
-        // function recoverMessages() {
-        //     fetch('/api/messages')
-        //     .then(response => {
-        //         if (response.ok) {
-        //             return response.json();
-        //         }
-        //     })
-        //     }
-
-
-
         socket.on('chat messages', (messages, userId) => {
             messages.forEach(message => {
                 // Para cada mensaje recibido, mostrarlo en el chat
-                displayMessage(message.texto, message.userId);
+                displayMessage(message.texto, userId);
                 scrollToBottom();
-
-                // displayContactButton(userId);
             });
         });
 
@@ -337,11 +347,17 @@
             e.preventDefault();
 
             if (messageInput.value) {
-                const message = messageInput.value;
-                const userId = "userIdprueba";
-                console.log('Prueba: ',userId);
+                verifyUserId();
+                const userLocal = localStorage.getItem('userId');
+                // Enviar el mensaje
+                const messageData = {
+                    texto: messageInput.value,
+                    userId: userLocal
+                };
+
+                console.log('Enviando mensaje:', messageData);
                 // Enviamos el mensaje al servidor
-                socket.emit('chat message', message, userId);
+                socket.emit('chat message', messageData.texto, messageData.userId);
                 messageInput.value = '';
                 scrollToBottom(); // Aseguramos que el scroll se mueva hacia el último mensaje
             }
@@ -350,11 +366,13 @@
 
         //Funcion para que aparezca el mernsaje en el Chat
         function displayMessage(message, userId) {
+            verifyUserId();
             console.log ("Pruebas con displayMessage" + userId)
             const messageElement = document.createElement('div');
             messageElement.textContent = message;
+            const userLocal = localStorage.getItem('userId');
 
-            if (userId === "userIdprueba") {
+            if (userId === userLocal) {
                 messageElement.classList.add('message-right');
             } else {
                 messageElement.classList.add('message-left');
@@ -368,6 +386,8 @@
 
         //Funcion para que se oculte el UserID (Prueba)
         document.getElementById("toggleVisibilityButton").addEventListener("click", function() {
+            verifyUserId();
+            const userLocal = localStorage.getItem('userId');
             const userIdContent = document.getElementById("userIdContent");
             if (userIdContent.dataset.visible === "true") {
                 // Ocultar contenido
@@ -375,7 +395,7 @@
                 userIdContent.dataset.visible = "false";
             } else {
                 // Mostrar contenido
-                userIdContent.textContent = "UserId: userIdprueba";
+                userIdContent.textContent = `UserId: ${userLocal}`;
                 userIdContent.dataset.visible = "true";
             }
         });
