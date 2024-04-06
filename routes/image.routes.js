@@ -13,7 +13,7 @@ router.use(bodyParser.json());
 const contactoPrueba = "contactoId"
 ////////////////////////////////
 
-router.get('/api/mensajes', async function(req, res) {
+router.get('/api/image', async function(req, res) {
 
 });
 
