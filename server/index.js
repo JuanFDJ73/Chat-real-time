@@ -10,9 +10,13 @@ import { Server } from "socket.io";
 import { createServer } from "node:http";
 
 //Rutas
-import cookieRoutes from "../routes/cookie.routes.js";
 import contactsRoutes from "../routes/contacts.routes.js";
+import cookieContactRoutes from "../routes/cookieContact.routes.js";
+import cookieUserRoutes from "../routes/cookieUser.routes.js";
+import descriptionRoutes from "../routes/description.routes.js";
+import imageRoutes from "../routes/image.routes.js";
 import messageRoutes from "../routes/message.routes.js";
+import nameRoutes from "../routes/name.routes.js";
 import initializeWebSocket from "../database/websocket.js";
 
 import db from "../database/db.js";
@@ -46,9 +50,13 @@ app.get('/', (req, res) => {
 
 initializeWebSocket(io, db);
 //Rutas
-app.use(cookieRoutes);
 app.use(contactsRoutes);
+app.use(cookieContactRoutes);
+app.use(cookieUserRoutes);
+app.use(descriptionRoutes);
+app.use(imageRoutes);
 app.use(messageRoutes);
+app.use(nameRoutes);
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 

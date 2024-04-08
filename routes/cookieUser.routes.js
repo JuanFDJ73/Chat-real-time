@@ -5,8 +5,10 @@ dotenv.config();
 
 const router = express.Router(); 
 
+const secretKey = process.env.SECRET_KEY
+
 //ruta para establecer la cookie
-router.get('/api/set-cookie', (req, res) => {
+router.get('/api/set-user-id', (req, res) => {
     const existingCookie = req.cookies.jwtChatOp;
 
     if (existingCookie) {
@@ -14,7 +16,6 @@ router.get('/api/set-cookie', (req, res) => {
     }
 
     const userId = "userIdprueba"; //Sera una Id aleatoria
-    const secretKey = process.env.SECRET_KEY;
 
     // Crear el JWT
     const token = jwt.sign({ userId: userId }, secretKey, { expiresIn: '30d' });
@@ -24,7 +25,6 @@ router.get('/api/set-cookie', (req, res) => {
     res.json({ userId: userId });
 });
 
-//REVISAR
 router.get('/api/verify-user-id', (req, res) => {
     const token = req.cookies.jwtChatOp;
 
@@ -33,7 +33,7 @@ router.get('/api/verify-user-id', (req, res) => {
       }
 
     try {
-        const verified = jwt.verify(token, process.env.SECRET_KEY);
+        const verified = jwt.verify(token, secretKey);
         const userId = verified.userId;
         console.log("userid:",userId);
         res.status(200).json({ userId: userId });

@@ -4,10 +4,6 @@ import admin from 'firebase-admin';
 import db from "../database/db.js";
 dotenv.config();
 
-////////////////////////////////
-const contactoPrueba = "contactoId"
-////////////////////////////////
-
 //Conexion con el websocket
 export default function initializeWebSocket(io, db) { 
     io.on('connection', async (socket) => {
@@ -17,25 +13,24 @@ export default function initializeWebSocket(io, db) {
             console.log('a user has disconnected')
         })
     
-        socket.on('chat message', (message, userId) => {
+        socket.on('chat message', (message, userId, contactId) => {
             console.log(message);
             console.log("userId: " + userId);
     
             // contactoID sera el Id del chat del usuario(tendre su imagen, nombre y el chat en cuestion)
-            const contactoId = contactoPrueba
             const usuario = "UsuarioPrueba"
             
             const nuevoMensaje = {
                 texto: message,
                 usuario: usuario,
                 userId: userId, // ID del remitente
-                contactoId: contactoId, // ID del destinatario
+                contactoId: contactId, // ID del destinatario
                 image: "Ruta de la imagen",
                 timestamp: admin.firestore.FieldValue.serverTimestamp()
             };
 
             // Referencia a la colección de mensajes del usuario
-            const mensajesCollection = db.collection(`mensajes/${userId}/${contactoId}`);
+            const mensajesCollection = db.collection(`mensajes/${userId}/${contactId}`);
     
             // Crear un nuevo documento con un ID automático y guardar el nuevo mensaje
             mensajesCollection.add(nuevoMensaje).then((docRef) => {
