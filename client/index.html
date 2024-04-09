@@ -6,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/static/icon.png">
     <title>ChatOp</title>
-    <link rel="stylesheet" type="text/css" href="/styles/indexStyle.css">    
+    <link rel="stylesheet" type="text/css" href="/styles/chat.css">
+    <link rel="stylesheet" type="text/css" href="/styles/chatHeader.css">
+    <link rel="stylesheet" type="text/css" href="/styles/chatInput.css">
+    <link rel="stylesheet" type="text/css" href="/styles/contactButton.css">
+    <link rel="stylesheet" type="text/css" href="/styles/contactHeader.css">
+    <link rel="stylesheet" type="text/css" href="/styles/indexStyle.css">  
 </head>
 
 <body>
@@ -143,7 +148,16 @@
             button.disabled = false;
         }
 
-        
+        function changeImgContactHeader(newImage) {
+            const imageElement = document.querySelector('#icon-container img');
+            if(imageElement) {
+                // Cambia el atributo 'src' de la imagen al nuevo
+                imageElement.src = newImage;
+            } else {
+                console.log('El elemento imagen no se encontró.');
+            }
+        }
+
         function setContacts() {
             fetch('/api/contacts')
                 .then(response => {
@@ -157,7 +171,33 @@
                         data.forEach(contactId => {
                             const button = document.createElement('button');
                             button.classList.add('contacts-menu');
-                            button.textContent = contactId;
+
+                            // Crear imagen
+                            const img = document.createElement('img');
+                            img.src = '/image/icon-man.png';
+                            img.alt = `img ${contactId}`;
+                            img.classList.add('contact-image'); //Revisar
+
+                            // Crear div para el texto
+                            const textDiv = document.createElement('div');
+                            textDiv.classList.add('contact-info');
+
+                            // Crear Nombre del contacto
+                            const titleSpan = document.createElement('div');
+                            titleSpan.textContent = contactId; // Usar contactId como título, se cambiara por el nobmre que asigne el usuario
+                            titleSpan.classList.add('contact-title');
+
+                            // Crear ultimo chat
+                            const chatSpan = document.createElement('div');
+                            chatSpan.textContent = 'ultimo mensaje ejemplo largo'; //ultimo mensaje
+                            chatSpan.classList.add('last-message');
+
+                            // Agregar imagen y texto al botón
+                            textDiv.appendChild(titleSpan);
+                            textDiv.appendChild(chatSpan);
+                            button.appendChild(img);
+                            button.appendChild(textDiv);
+
                             button.addEventListener('click', function() {
                                 fetch('/api/contact-button', {
                                     method: 'POST',
@@ -170,6 +210,7 @@
                                 .then(messages => {
                                     cleanChat();
                                     setCookieContact(contactId)
+                                    changeImgContactHeader(img.src)
                                     // Iterar a través de cada mensaje y mostrarlo
                                     messages.forEach(message => {
                                         console.log(message);
@@ -202,28 +243,38 @@
             scrollToBottom();
         });
 
-        form.addEventListener('submit', function (e) {
+        form.addEventListener('submit', async function (e) {
             e.preventDefault();
             
-            verifyUserId();
-            verifyContactId();
-            
-            if (messageInput.value) {
-                const userLocal = localStorage.getItem('userId');
-                const contactId = localStorage.getItem('contactId');
-                // Enviar el mensaje
-                const messageData = {
-                    texto: messageInput.value,
-                    userId: userLocal,
-                    contactId: contactId
-                };
+            try {
+                
+                verifyUserId();
+                verifyContactId();
+    
+                //REVISAR: por que guarda el mensaje en localStorage sin antes verificar
+                
+                if (messageInput.value) {
+                    const userLocal = localStorage.getItem('userId');
+                    const contactId = localStorage.getItem('contactId');
+                    console.log(contactId);
+                    // Enviar el mensaje
+                    const messageData = {
+                        texto: messageInput.value,
+                        userId: userLocal,
+                        contactId: contactId
+                    };
+    
+                    console.log('Enviando mensaje:', messageData);
+                    // Enviamos el mensaje al servidor
+                    await socket.emit('chat message', messageData.texto, messageData.userId, messageData.contactId);
+                    messageInput.value = '';
+                    scrollToBottom(); // Aseguramos que el scroll se mueva hacia el último mensaje
+                }
 
-                console.log('Enviando mensaje:', messageData);
-                // Enviamos el mensaje al servidor
-                socket.emit('chat message', messageData.texto, messageData.userId, messageData.contactId);
-                messageInput.value = '';
-                scrollToBottom(); // Aseguramos que el scroll se mueva hacia el último mensaje
+            } catch (error) {
+                console.error('Ocurrió un error:', error);
             }
+
         });
 
         //Funcion para "ocultar" el userId
@@ -266,6 +317,8 @@
             cleanCookieContact();
             cambiarTitulo("ChatOp");
             chatOff();
+            changeImgContactHeader("/static/perfil.png");
+            
         })
 
         //Funcion para que se oculte el UserID 
@@ -290,7 +343,7 @@
 
     <section id="menu-container" class="menu-container">
             <!-- Diseño en modo prueba -->
-        <div id="opcions-container" class="opcions-container">
+        <div id="user-id-container" class="user-id-container">
             <div id="user" class="user">
                 <div id="user-contact" class="user-contact">
                     <h4 id="userIdContent" data-visible="false">UserId: </h4>
@@ -315,14 +368,13 @@
             <div id="nombre-contact" class="nombre-contact">
                 <h1>ChatOp</h1>
             </div>
-            <!-- Contacto aparecerán aquí -->
 
         </div>
         <div id="message-container" class="message-container">
             <!-- Los mensajes aparecerán aquí -->
         </div>
         <form id="form">
-            <input type="text" name="message" id="message" placeholder="Type a message" />
+            <input type="text" name="message" id="message" placeholder="Escribe un mensaje" />
             <button type="submit">Enviar</button>
         </form>
     </section>

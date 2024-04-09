@@ -10,7 +10,7 @@ const router = express.Router();
 router.use(bodyParser.json());
 
 //////////////////////////////////////////////////////////////////
-// Falta: Funcion Boton (Traer chat del contacto seleccionado y colocar el boton seleccionado)
+// Falta: Funcion Boton (colocar el boton seleccionado)
 //////////////////////////////////////////////////////////////////
 router.post('/api/contact-button', async function(req, res) {
     try{

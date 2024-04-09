@@ -1,0 +1,25 @@
+/* FORMULARIO */
+
+#form {
+    display: flex;
+    background-color: #f4f7f6;
+    border-top: 2px solid #ddd;/* Línea de separación */
+}
+
+#form input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: none;
+}
+
+#form button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+#form button:hover {
+    background-color: #0056b3;
+}

@@ -1,0 +1,33 @@
+/* Donde aparece los mensajes */
+.message-container {
+    flex: 1;
+    overflow-x: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+/* Mensaje del chat propio */
+.message-right {
+    align-self: end;
+    padding: 10px;
+    background-color: #e0e0e0; /* Color de fondo para los mensajes */
+    border-radius: 10px; /* Mensajes con bordes redondeados */
+    width: fit-content;
+    max-width: 80%; /* Máximo ancho de mensaje */
+    text-align: left;
+}
+
+/* Mensaje del chat del otro usuario */
+.message-left {
+    align-self: flex-start; /* Alinea los mensajes a la izquierda */
+    padding: 10px;
+    background-color: #e0e0e0; /* Color de fondo para los mensajes */
+    border-radius: 10px; /* Mensajes con bordes redondeados */
+    width: fit-content;
+    max-width: 80%; /* Máximo ancho de mensaje */
+    text-align: left;
+}
+
