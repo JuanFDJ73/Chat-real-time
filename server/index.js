@@ -19,6 +19,7 @@ import messageRoutes from "../routes/message.routes.js";
 import nameRoutes from "../routes/name.routes.js";
 import initializeWebSocket from "../database/websocket.js";
 
+
 import db from "../database/db.js";
 
 dotenv.config();
@@ -43,6 +44,7 @@ const io = new Server(server, {
 
 //Ruta de las imagenes estaticas
 app.use(express.static('public'));
+app.use(express.static('client/modules'));
 app.use(logger('dev'))
 app.get('/', (req, res) => {
     res.sendFile(process.cwd() + '/client/index.html');

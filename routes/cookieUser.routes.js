@@ -1,5 +1,6 @@
 import express from "express";
 import jwt from 'jsonwebtoken'; 
+import { verifyUserId , randomUserId } from "../database/cookieUserId.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -15,7 +16,7 @@ router.get('/api/set-user-id', (req, res) => {
         return res.status(400).json({ error: 'La cookie ya existe' });
     }
 
-    const userId = "userIdprueba"; //Sera una Id aleatoria
+    const userId = randomUserId();
 
     // Crear el JWT
     const token = jwt.sign({ userId: userId }, secretKey, { expiresIn: '30d' });
@@ -33,9 +34,7 @@ router.get('/api/verify-user-id', (req, res) => {
       }
 
     try {
-        const verified = jwt.verify(token, secretKey);
-        const userId = verified.userId;
-        console.log("userid:",userId);
+        const userId = verifyUserId(token);
         res.status(200).json({ userId: userId });
     } catch (error) {
         res.status(400).send('Token inválido');

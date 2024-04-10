@@ -1,5 +1,6 @@
 import express from "express";
 import jwt from 'jsonwebtoken'; 
+import { verifyContactId } from "../database/cookieContactId.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -24,9 +25,7 @@ router.get('/api/verify-contact-id', (req, res) => {
     }
 
     try {
-        const verified = jwt.verify(token, secretKey);
-        const contactId = verified.contactId;
-        console.log("contactId:",contactId);
+        const contactId = verifyContactId(token);
         res.status(200).json({ contactId: contactId });
     } catch (error) {
         res.status(400).send('Token inválido');
