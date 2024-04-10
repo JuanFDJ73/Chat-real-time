@@ -1,66 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="/static/icon.png">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/static/icon.png" />
     <title>ChatOp</title>
-    <link rel="stylesheet" type="text/css" href="/chat.css">
-    <link rel="stylesheet" type="text/css" href="/chatHeader.css">
-    <link rel="stylesheet" type="text/css" href="/chatInput.css">
-    <link rel="stylesheet" type="text/css" href="/contactButton.css">
-    <link rel="stylesheet" type="text/css" href="/contactHeader.css">
-    <link rel="stylesheet" type="text/css" href="/indexStyle.css">
-    <link rel="stylesheet" type="text/css" href="/contactFooter.css"> 
-</head>
+    <link rel="stylesheet" type="text/css" href="/chat.css" />
+    <link rel="stylesheet" type="text/css" href="/chatHeader.css" />
+    <link rel="stylesheet" type="text/css" href="/chatInput.css" />
+    <link rel="stylesheet" type="text/css" href="/contactButton.css" />
+    <link rel="stylesheet" type="text/css" href="/contactHeader.css" />
+    <link rel="stylesheet" type="text/css" href="/indexStyle.css" />
+    <link rel="stylesheet" type="text/css" href="/contactFooter.css" />
+  </head>
 
-<body>
-
-    <script type="module">
-        import { initChatApp } from './main.js';
-        initChatApp();
-    </script>
-    
-    <section id="menu-container" class="menu-container">
-            <!-- Diseño en modo prueba -->
-        <div id="user-id-container" class="user-id-container">
-            <div id="user" class="user">
-                <div id="user-contact" class="user-contact">
-                    <h4 id="userIdContent" data-visible="false">UserId: </h4>
-                </div>
-                <button id="toggleVisibilityButton">👁️</button>
-            </div>
-        </div>
+  <body>
+    <main class="app">
+      <aside class="aside">
+        <section class="aside-logo">
+          <h4 id="userIdContent" data-visible="false">UserId:</h4>
+          <button id="toggleVisibilityButton">👁️</button>
+        </section>
         <div id="contacts" class="contacts">
-            <!-- Contactos aparecerán aquí -->
-            <!-- <button class="contacts-menu">contacto</button>  Contacto ejemplo-->
+          <!-- Contactos aparecerán aquí -->
+          <!-- <button class="contacts-menu">contacto</button>  Contacto ejemplo-->
         </div>
-        <div id="bottom-fixed" class="bottom-fixed"></div>
-    </section>
+      </aside>
 
-    <section id="chat">
+      <section id="chat">
         <div id="contact-container" class="contact-container">
-            <button id="back" class="back">
-                <img src="/static/back.png" alt="">
-            </button>
-            <div id="icon-container" class="icon">
-                <img src="/static/perfil.png" alt="icono">
-            </div>
-            <div id="nombre-contact" class="nombre-contact">
-                <h1>ChatOp</h1>
-            </div>
-
+          <button id="back" class="back">
+            <img src="/static/back.png" alt="" />
+          </button>
+          <div id="icon-container" class="icon">
+            <img src="/static/perfil.png" alt="icono" />
+          </div>
+          <div id="nombre-contact" class="nombre-contact">
+            <h1>ChatOp</h1>
+          </div>
         </div>
         <div id="message-container" class="message-container">
-            <!-- Los mensajes aparecerán aquí -->
+          <!-- Los mensajes aparecerán aquí -->
         </div>
         <form id="form">
-            <input type="text" name="message" id="message" placeholder="Escribe un mensaje" />
-            <button type="submit">Enviar</button>
+          <input
+            type="text"
+            name="message"
+            id="message"
+            placeholder="Escribe un mensaje"
+          />
+          <button type="submit">Enviar</button>
         </form>
-    </section>
+      </section>
+    </main>
+  </body>
 
-</body>
-
+  <script type="module">
+    import { initChatApp } from "./main.js";
+    initChatApp();
+  </script>
 </html>

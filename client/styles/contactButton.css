@@ -1,49 +1,40 @@
-.contacts{
-    width: 100%;
-    height: calc(85vh-100px);
-    background-color: lightblue;
-    overflow-y: auto;
+.contacts {
+    display: flex;
+    flex-direction: column;
 }
 
-/* Estilos para el botón */
 .contacts-menu {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: start; /* Ajustado para alinear el contenido al inicio */
-    width: 100%;
-    height: 100px;
+    width: 90%;
     background-color: #f4f7f6;
-    border: 1px solid #ddd;
-    padding: 10px; /* Agregar algo de relleno */
-    overflow: hidden; /* Asegurarse de que todo exceso de contenido se oculta */
+    border: none;
+    padding: 3% 3%;
+    cursor: pointer;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    margin: auto;
+    margin-bottom: 3%;
 }
 
 .contacts-menu img {
-    width: 30%; /* La imagen acapara el 30% del ancho del botón */
-    height: auto; /* Mantener la proporción de la imagen */
-    object-fit: cover; /* Asegurar que la imagen cubra el espacio asignado */
+    width: 20%;
 }
 
 .contact-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 70%; /* El contenedor ocupa el 70% restante */
-    padding-left: 10px; /* Espaciado entre la imagen y el texto */
-    overflow: hidden; /* Ocultar el contenido excedente */
+    padding-left: 10px;
 }
 
 .contact-title {
-    font-weight: bold; /* El título en negrita */
-    white-space: nowrap; /* Evitar que el texto se envuelva */
-    overflow: hidden; /* Ocultar contenido excedente */
-    text-overflow: ellipsis; /* Añadir puntos suspensivos si el contenido excede el ancho disponible */
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.2em;
+
 }
 
 .last-message {
-    white-space: nowrap; /* Mismo Css que el titulo pero sin negrilla */
-    overflow: hidden; 
-    text-overflow: ellipsis; 
+    white-space: nowrap;
+    /* Mismo Css que el titulo pero sin negrilla */
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-
