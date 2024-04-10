@@ -6,51 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/static/icon.png">
     <title>ChatOp</title>
-    <link rel="stylesheet" type="text/css" href="/styles/chat.css">
-    <link rel="stylesheet" type="text/css" href="/styles/chatHeader.css">
-    <link rel="stylesheet" type="text/css" href="/styles/chatInput.css">
-    <link rel="stylesheet" type="text/css" href="/styles/contactButton.css">
-    <link rel="stylesheet" type="text/css" href="/styles/contactHeader.css">
-    <link rel="stylesheet" type="text/css" href="/styles/indexStyle.css">  
+    <link rel="stylesheet" type="text/css" href="/chat.css">
+    <link rel="stylesheet" type="text/css" href="/chatHeader.css">
+    <link rel="stylesheet" type="text/css" href="/chatInput.css">
+    <link rel="stylesheet" type="text/css" href="/contactButton.css">
+    <link rel="stylesheet" type="text/css" href="/contactHeader.css">
+    <link rel="stylesheet" type="text/css" href="/indexStyle.css">
+    <link rel="stylesheet" type="text/css" href="/contactFooter.css"> 
 </head>
 
 <body>
 
     <script type="module">
-        import { cleanChat, chatOn, chatOff, cambiarTitulo, changeImgContactHeader, displayMessage, userIdVisibilyOff, switchUserIdVisibility} from '/ui.js';
-        import { setCookieUser, cleanCookieContact, apiVerifyUserId, setCookieContact, apiVerifyContactId, setContacts } from '/api.js';
-        import { setupSocketListeners, socket } from '/socket.js';
-        import { hiddenWords, scrollToBottom } from '/utils.js';
-        import { handleSubmit } from '/forms.js';
-        // Capturamos el formulario y el input del mensaje, así como el contenedor de mensajes.
-        const form = document.getElementById('form');
-        const messageInput = document.getElementById('message');
-        const messageContainer = document.getElementById('message-container');
-
-        // Llamar a la función al cargar la página
-        window.onload = function() {
-            setCookieUser();
-            cleanCookieContact();
-            setContacts();
-            userIdVisibilyOff()
-            chatOff();
-        };
-        //Inicializacion del socket
-        setupSocketListeners(socket, displayMessage, scrollToBottom);
-        handleSubmit(socket);
-
-        document.getElementById("back").addEventListener("click", function() {
-            cleanChat();
-            cleanCookieContact();
-            cambiarTitulo("ChatOp");
-            chatOff();
-            changeImgContactHeader("/static/perfil.png");         
-        })
-
-        document.getElementById("toggleVisibilityButton").addEventListener("click", switchUserIdVisibility);
-
+        import { initChatApp } from './main.js';
+        initChatApp();
     </script>
-
+    
     <section id="menu-container" class="menu-container">
             <!-- Diseño en modo prueba -->
         <div id="user-id-container" class="user-id-container">
@@ -65,6 +36,7 @@
             <!-- Contactos aparecerán aquí -->
             <!-- <button class="contacts-menu">contacto</button>  Contacto ejemplo-->
         </div>
+        <div id="bottom-fixed" class="bottom-fixed"></div>
     </section>
 
     <section id="chat">

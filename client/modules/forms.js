@@ -15,14 +15,11 @@ export function handleSubmit(socket) {
             if (messageInput.value) {
                 const userLocal = localStorage.getItem('userId');
                 const contactId = localStorage.getItem('contactId');
-                console.log("SUBMIT prueba");
-                console.log(userLocal.userId);
-                console.log(contactId);
                 // Enviar el mensaje
                 const messageData = {
                     texto: messageInput.value,
-                    userId: userLocal.userId,
-                    contactId: contactId.contactId
+                    userId: userLocal,
+                    contactId: contactId
                 };
 
                 console.log('Enviando mensaje:', messageData);

@@ -1,0 +1,8 @@
+.bottom-fixed {
+    position: absolute; 
+    bottom: 0; /* Fijar en la parte inferior */
+    left: 0; /* Alinear a la izquierda */
+    width: 100%;
+    height: 35px;
+    background-color: #0df7a9; /* Color de fondo */
+}

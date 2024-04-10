@@ -45,6 +45,7 @@ const io = new Server(server, {
 //Ruta de las imagenes estaticas
 app.use(express.static('public'));
 app.use(express.static('client/modules'));
+app.use(express.static('client/styles'));
 app.use(logger('dev'))
 app.get('/', (req, res) => {
     res.sendFile(process.cwd() + '/client/index.html');
