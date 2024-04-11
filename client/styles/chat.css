@@ -1,27 +1,27 @@
 /* Donde aparece los mensajes */
 .message-container {
-    flex: 1;
-    overflow-x: auto;
-    padding: 10px;
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 10px;
-    align-items: flex-start;
-}
+  flex: 1;
+  overflow-x: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  align-items: flex-start;
 
-/* Mensaje del chat propio */
-.message-right {
+    /* Mensaje del chat propio */
+  & .message-right {
     align-self: end;
     padding: 10px;
-    background-color: #e0e0e0; /* Color de fondo para los mensajes */
+    background-color: #bee3ef; /* Color de fondo para los mensajes */
     border-radius: 10px; /* Mensajes con bordes redondeados */
     width: fit-content;
     max-width: 80%; /* Máximo ancho de mensaje */
     text-align: left;
-}
+    margin: 0 2%;
+  }
 
-/* Mensaje del chat del otro usuario */
-.message-left {
+  /* Mensaje del chat del otro usuario */
+  & .message-left {
     align-self: flex-start; /* Alinea los mensajes a la izquierda */
     padding: 10px;
     background-color: #e0e0e0; /* Color de fondo para los mensajes */
@@ -29,5 +29,123 @@
     width: fit-content;
     max-width: 80%; /* Máximo ancho de mensaje */
     text-align: left;
+    margin: 0 0 0 1%
+  }
 }
 
+
+
+.spinner-container {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  width: 70%;
+}
+
+.spinner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #333;
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+} 
+
+/* chat Contact */
+.contact-container {
+  /* arriba, derecha, abajo, izquieda */
+  display: flex;
+  width: auto;
+  align-items: center;
+  height: 15vh;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra en la parte inferior */
+
+  & .back {
+    width: 5%;
+    object-fit: contain;
+    border: none;
+    background-color: transparent;
+  }
+  
+  & .back img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  & .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: blueviolet; */
+    width: 11vb;
+    max-height: 15vh;
+    overflow: hidden; /* evitar desbordamientos */
+  }
+  
+  & .icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+    transition: filter 0.3s;
+  }
+  
+  & .icon:hover img {
+    filter: brightness(70%);
+  }
+  
+  & .nombre-contact{
+    margin-left: 5px;
+    width: 70%;
+    height: auto;
+    /* background-color: aquamarine; */
+  }
+  
+  & .nombre-contact h1 {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 180px; /* Ajusta el ancho máximo según necesites */
+  }
+}
+
+
+
+
+/* FORMULARIO */
+
+#form {
+  display: flex;
+  background-color: #f4f7f6;
+  border-top: 2px solid #ddd;/* Línea de separación */
+  height: 6vh;
+}
+
+#form input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: none;
+}
+
+#form button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+#form button:hover {
+  background-color: #0056b3;
+}

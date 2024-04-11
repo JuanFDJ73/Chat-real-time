@@ -4,6 +4,9 @@ import { scrollToBottom } from '/utils.js';
 
 export function handleSubmit(socket) {
     const form = document.getElementById('form');
+    if (!form) {
+        return;
+    }
     const messageInput = document.getElementById('message');
     form.addEventListener('submit', async function (e) {
         e.preventDefault();

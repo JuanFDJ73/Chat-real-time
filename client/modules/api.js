@@ -1,5 +1,5 @@
-import { cleanChat, chatOn, cambiarTitulo, changeImgContactHeader, displayMessage} from '/ui.js';
-import { scrollToBottom } from '/utils.js';
+import { cleanChat, chatOn, cambiarTitulo, changeImgContactHeader, displayMessage, falseLoading, createChatSection} from '/ui.js';
+import { scrollToBottom , removeButtonClicked } from '/utils.js';
 
 // Funciones para interactuar con la API.
 export function setCookieUser() {
@@ -100,15 +100,14 @@ export function contactButton(contactId, img) {
         cleanChat();
         setCookieContact(contactId)
         changeImgContactHeader(img)
+        chatOn()
         // Iterar a través de cada mensaje y mostrarlo
         messages.forEach(message => {
-            console.log(message);
             
-            chatOn()
             displayMessage(message.texto, message.userId);
-            scrollToBottom();
             
         });
+        scrollToBottom();
     })
     .catch(error => {
         console.error('Error:', error);
@@ -156,6 +155,10 @@ export function setContacts() {
                 button.appendChild(textDiv);
 
                 button.addEventListener('click', function() {
+                    createChatSection();
+                    removeButtonClicked(button)
+                    button.classList.add('clicked');
+                    falseLoading(contactId);
                     contactButton(contactId, img.src);
                 });
                 document.getElementById('contacts').appendChild(button);

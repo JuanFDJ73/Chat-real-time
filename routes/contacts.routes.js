@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import db from "../database/db.js";
+import { getMessage } from "../database/contact.js";
 
 dotenv.config(); 
 
@@ -22,17 +23,7 @@ router.post('/api/contact-button', async function(req, res) {
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
         const userId = decoded.userId;
 
-        const mensajesUsuarioQuery = db.collection(`mensajes/${userId}/${contactId}`).orderBy("timestamp");
-        const mensajesContactoQuery = db.collection(`mensajes/${contactId}/${userId}`).orderBy("timestamp");
-
-        const messageUsuarioSnap = await mensajesUsuarioQuery.get();
-        const messageContactoSnap = await mensajesContactoQuery.get();
-
-        let message = [];
-        messageUsuarioSnap.forEach(doc => message.push({ id: doc.id, ...doc.data() }));
-        messageContactoSnap.forEach(doc => message.push({ id: doc.id, ...doc.data() }));
-
-        message.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
+        const message = await getMessage(userId, contactId) 
         res.json(message);
     } catch(error){
         console.error('Error al recuperar y ordenar mensajes:', error);

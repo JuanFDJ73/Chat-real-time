@@ -1,0 +1,93 @@
+/* todo lo del aside (arriba) */
+.aside {
+    position: relative;
+    width: 25%;
+    height: 100vh;
+    box-sizing: border-box;
+
+    & .aside-logo {
+        height: 15vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        background-color: #ffffff;
+    }
+
+    & #toggleVisibilityButton {
+        cursor: pointer;
+        /* Hacer saber al usuario que es clickeable */
+        border: none;
+        /* Quita el borde del botón */
+        background: transparent;
+        /* fondo transparente */
+    }
+}
+
+
+
+
+
+
+/* Botones contacto */
+.contacts {
+    display: flex;
+    flex-direction: column;
+
+    & .contacts-menu {
+        display: flex;
+        align-items: center;
+        width: 90%;
+        background-color: #f4f7f6;
+        border: none;
+        padding: 3% 3%;
+        cursor: pointer;
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+        margin: auto;
+        margin-bottom: 3%;
+    }
+
+    & .contacts-menu:hover {
+        background-color: #e5e5e5
+    }
+    & .contacts-menu.clicked {
+        background-color: #cecece;
+    }
+    & .contacts-menu img {
+        width: 20%;
+    }
+    
+    & .contact-info {
+        padding-left: 10px;
+    }
+
+    & .contact-title {
+        text-align: left;
+        font-weight: bold;
+        font-size: 1.2em;
+        font-weight: bold; /* El título en negrita */
+        white-space: nowrap; /* Evitar que el texto se envuelva */
+        overflow: hidden; /* Ocultar contenido excedente */
+        text-overflow: ellipsis; /* Añadir puntos suspensivos si el contenido excede el ancho disponible */
+    }
+    
+    & .last-message {
+        white-space: nowrap;
+        /* Mismo Css que el titulo pero sin negrilla */
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* Opciones del chat (abajo) */
+.contactOptions {
+    position: absolute; 
+    bottom: 0; /* Fijar en la parte inferior */
+    left: 0; /* Alinear a la izquierda */
+    width: 100%;
+    height: 6vh;
+    background-color: #f7f7f7; /* Color de fondo */
+    box-shadow: 4px -6px 10px rgba(0, 0, 0, 0.1);
+}

@@ -1,4 +1,4 @@
-import { hiddenWords } from '/utils.js';
+import { hiddenWords , createSpinner} from '/utils.js';
 // Gestión de elementos de la interfaz de usuario y eventos.
 export function cleanChat() {
     const messageInput = document.getElementById('message');
@@ -74,3 +74,92 @@ export function switchUserIdVisibility() {
         userIdContent.dataset.visible = "true";
     }
 }
+
+export function falseLoading(contactId) {
+    if (contactId != localStorage.getItem('contactId')) {
+        createSpinner();
+        const spinnerContainer = document.getElementById('spinnerContainer');
+        spinnerContainer.style.display = 'flex'; // Mostrar el spinner
+    
+        setTimeout(function() {
+            spinnerContainer.style.display = 'none'; // Ocultar el spinner después de 1 segundo
+        }, 1000); // 1000 milisegundos = 1 segundo
+    }
+}
+
+export function createChatSection() {
+    // Busca el elemento <section> con el id="chat"
+    const chatSection = document.getElementById('chat');
+
+    //Verifica que este vacio.
+    if (chatSection.children.length === 0){
+        // Crear el div con id="contact-container" y sus elementos hijos
+        const contactContainerDiv = document.createElement('div');
+        contactContainerDiv.id = 'contact-container';
+        contactContainerDiv.classList.add('contact-container');
+    
+        const backButton = document.createElement('button');
+        backButton.id = 'back';
+        backButton.classList.add('back');
+        const backImage = document.createElement('img');
+        backImage.src = '/static/back.png';
+        backButton.appendChild(backImage);
+    
+        const iconContainerDiv = document.createElement('div');
+        iconContainerDiv.id = 'icon-container';
+        iconContainerDiv.classList.add('icon');
+        const iconImage = document.createElement('img');
+        iconImage.src = '/static/perfil.png';
+        iconContainerDiv.appendChild(iconImage);
+    
+        const nombreContactDiv = document.createElement('div');
+        nombreContactDiv.id = 'nombre-contact';
+        nombreContactDiv.classList.add('nombre-contact');
+        const h1 = document.createElement('h1');
+        h1.textContent = 'ChatOp';
+        nombreContactDiv.appendChild(h1);
+    
+        // Agregar los elementos hijos al contactContainerDiv
+        contactContainerDiv.appendChild(backButton);
+        contactContainerDiv.appendChild(iconContainerDiv);
+        contactContainerDiv.appendChild(nombreContactDiv);
+    
+        // Crear el div con id="message-container"
+        const messageContainerDiv = document.createElement('div');
+        messageContainerDiv.id = 'message-container';
+        messageContainerDiv.classList.add('message-container');
+        // Agregar el falso loading aquí
+        const spinnerContainerDiv = document.createElement('div');
+        spinnerContainerDiv.id = 'spinnerContainer';
+        spinnerContainerDiv.classList.add('spinner-container');
+        const spinnerDiv = document.createElement('div');
+        spinnerDiv.id = 'spinner';
+        spinnerDiv.classList.add('spinner');
+        spinnerContainerDiv.appendChild(spinnerDiv);
+        messageContainerDiv.appendChild(spinnerContainerDiv);
+    
+        // Crear el formulario con id="form" y sus elementos hijos
+        const form = document.createElement('form');
+        form.id = 'form';
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'message';
+        input.id = 'message';
+        input.placeholder = 'Escribe un mensaje';
+        const button = document.createElement('button');
+        button.type = 'submit';
+        button.textContent = 'Enviar';
+        form.appendChild(input);
+        form.appendChild(button);
+    
+        // Agregar los elementos al chatSection
+        chatSection.appendChild(contactContainerDiv);
+        chatSection.appendChild(messageContainerDiv);
+        chatSection.appendChild(form);
+    
+        // Devolver el chatSection
+        return chatSection;
+    }
+}
+
+
