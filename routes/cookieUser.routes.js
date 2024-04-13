@@ -13,7 +13,8 @@ router.get('/api/set-user-id', (req, res) => {
     const existingCookie = req.cookies.jwtChatOp;
 
     if (existingCookie) {
-        return res.status(400).json({ error: 'La cookie ya existe' });
+        const userIdLocal = verifyUserId(existingCookie);
+        return res.status(201).json({ userId: userIdLocal});
     }
 
     const userId = randomUserId();

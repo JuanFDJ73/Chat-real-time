@@ -1,4 +1,7 @@
-import { hiddenWords , createSpinner} from '/utils.js';
+import { cleanCookieContact } from './api.js';
+import { socket } from '/socket.js';
+import { hiddenWords , createSpinner, cleanSectionChat} from '/utils.js';
+import { handleSubmit } from './forms.js';
 // Gestión de elementos de la interfaz de usuario y eventos.
 export function cleanChat() {
     const messageInput = document.getElementById('message');
@@ -104,7 +107,11 @@ export function createChatSection() {
         const backImage = document.createElement('img');
         backImage.src = '/static/back.png';
         backButton.appendChild(backImage);
-    
+        backButton.addEventListener('click', function() {
+            cleanCookieContact();
+            cleanSectionChat();
+        });
+
         const iconContainerDiv = document.createElement('div');
         iconContainerDiv.id = 'icon-container';
         iconContainerDiv.classList.add('icon');
@@ -116,7 +123,7 @@ export function createChatSection() {
         nombreContactDiv.id = 'nombre-contact';
         nombreContactDiv.classList.add('nombre-contact');
         const h1 = document.createElement('h1');
-        h1.textContent = 'ChatOp';
+        h1.textContent = '';
         nombreContactDiv.appendChild(h1);
     
         // Agregar los elementos hijos al contactContainerDiv
@@ -149,6 +156,12 @@ export function createChatSection() {
         const button = document.createElement('button');
         button.type = 'submit';
         button.textContent = 'Enviar';
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleSubmit(socket);
+        });
+        
         form.appendChild(input);
         form.appendChild(button);
     

@@ -5,14 +5,18 @@
     height: 100vh;
     box-sizing: border-box;
 
+    & .userIdContent {
+        margin : 0 0 0 5%
+    }
+
     & .aside-logo {
         height: 15vh;
         display: flex;
-        justify-content: center;
         align-items: center;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         margin-bottom: 30px;
         background-color: #ffffff;
+        justify-content: space-between;
     }
 
     & #toggleVisibilityButton {
@@ -22,6 +26,7 @@
         /* Quita el borde del botón */
         background: transparent;
         /* fondo transparente */
+        margin: 0 5%;
     }
 }
 
@@ -83,6 +88,7 @@
 
 /* Opciones del chat (abajo) */
 .contactOptions {
+    display: flex;
     position: absolute; 
     bottom: 0; /* Fijar en la parte inferior */
     left: 0; /* Alinear a la izquierda */
@@ -90,4 +96,124 @@
     height: 6vh;
     background-color: #f7f7f7; /* Color de fondo */
     box-shadow: 4px -6px 10px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+
+.contactOptions button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    height: 100%; 
+    width: auto; 
+}
+
+.contactOptions button img {
+    height: 75%; 
+    width: auto; 
+    transition: opacity 0.3s ease; /* Transición suave para el efecto de opacidad */
+}
+
+.contactOptions button:hover img {
+    opacity: 0.7; /* Efecto de opacidad al pasar el mouse */
+}
+
+
+/* Modal */
+
+/* Estilos para el fondo oscuro semi-transparente */
+.modal {
+    position: fixed; /* Posicionamiento fijo en la pantalla */
+    top: 0;
+    left: 0;
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Alto completo */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparente */
+    display: flex;
+    align-items: center; /* Centrado vertical */
+    justify-content: center; /* Centrado horizontal */
+    z-index: 1000; /* Asegura que esté sobre otros elementos */
+}
+
+/* Estilos para el modal */
+.modal {
+    position: fixed; /* Posicionamiento fijo en la pantalla */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparente */
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    z-index: 1000; 
+
+    /* Estilos para el contenido del modal */
+    & .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 20%; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        position: relative; 
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+    }
+
+    & .form-group {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    & label, input, button {
+        width: 90%;
+        text-align: center;
+    }
+
+    & input[type="text"], button.submit-button {
+        padding: 10px;
+        margin-top: 5px;
+    }
+
+    & button.submit-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    & button.submit-button:hover {
+        background-color: #0056b3;
+    }
+
+    & .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+}
+
+/* Estilos para pantallas pequeñas */
+@media only screen and (max-width: 600px) {
+    .modal-content {
+        width: 90%; /* Ancho del modal para pantallas pequeñas */
+        max-width: none; /* Anula el ancho máximo */
+    }
+
+    label, input, button {
+        width: 100%; /* Ajuste del ancho al 100% para pantallas pequeñas */
+    }
 }

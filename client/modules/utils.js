@@ -1,5 +1,5 @@
 // Funciones de utilidad
-
+import { cleanCookieContact } from "./api.js";
 export function hiddenWords(palabra) {
     let hiddenWord = '';
     for (let i = 0; i < palabra.length; i++) {
@@ -34,16 +34,31 @@ export function removeButtonClicked(button) {
     
     buttons.forEach(button => {
         button.addEventListener('click', function() {
-            // Remover la clase 'active' de todos los botones
+            // Remover la clase 'clicked' de todos los botones
             buttons.forEach(btn => btn.classList.remove('clicked'));
             
-            // Agregar la clase 'active' al botón actual
+            // Agregar la clase 'clicked' al botón actual
             this.classList.add('clicked');
         });
     });
 }
 
+export function removeButtonActive() {
+    const buttons = document.querySelectorAll('.contacts-menu');
+    
+    buttons.forEach(button => {
+        button.classList.remove('clicked');
+    });
+}
 export function cleanSectionChat() {
     const chatSection = document.getElementById('chat');
     chatSection.innerHTML = ''; // Limpiamos el contenido existente
+}
+
+export function handleEscapeKey(event) {
+    if (event.key === 'Escape') {
+        cleanCookieContact();
+        cleanSectionChat();
+        removeButtonActive();
+    }
 }

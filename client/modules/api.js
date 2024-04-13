@@ -16,7 +16,7 @@ export function setCookieUser() {
             console.log("La cookie ha sido establecida por el servidor");
         })
         .catch(error => {
-            console.error('Error al establecer la cookie: ', error);
+            localStorage.setItem('userId', error.userId);
         });
 }
 
@@ -100,10 +100,9 @@ export function contactButton(contactId, img) {
         cleanChat();
         setCookieContact(contactId)
         changeImgContactHeader(img)
-        chatOn()
         // Iterar a través de cada mensaje y mostrarlo
         messages.forEach(message => {
-            
+ 
             displayMessage(message.texto, message.userId);
             
         });

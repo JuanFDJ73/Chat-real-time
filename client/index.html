@@ -1,36 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/static/icon.png" />
-    <title>ChatOp</title>
-    <link rel="stylesheet" type="text/css" href="/chat.css" />
-    <link rel="stylesheet" type="text/css" href="/styles.css" />
-    <link rel="stylesheet" type="text/css" href="/sidebar.css" />
-  </head>
 
-  <body>
-    <main class="app">
-      <aside class="aside">
-        <section class="aside-logo">
-          <h4 id="userIdContent" data-visible="false">UserId:</h4>
-          <button id="toggleVisibilityButton">👁️</button>
-        </section>
-        <div id="contacts" class="contacts">
-          <!-- Contactos aparecerán aquí -->
-          <!-- <button class="contacts-menu">contacto</button>  Contacto ejemplo-->
-        </div>
-        <div class="contactOptions"></div>
-      </aside>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/static/icon.png" />
+  <title>ChatOp</title>
+  <link rel="stylesheet" type="text/css" href="/chat.css" />
+  <link rel="stylesheet" type="text/css" href="/styles.css" />
+  <link rel="stylesheet" type="text/css" href="/sidebar.css" />
+</head>
 
-      <section id="chat">
+<body>
+  <main class="app">
+    <aside class="aside">
+      <section class="aside-logo">
+        <h4 class="userIdContent" id="userIdContent" data-visible="false">UserId:</h4>
+        <button class="toggleVisibilityButton" id="toggleVisibilityButton">👁️</button>
       </section>
-    </main>
-  </body>
+      <div id="contacts" class="contacts">
+        <!-- Contactos aparecerán aquí -->
+        <!-- <button class="contacts-menu">contacto</button>  Contacto ejemplo-->
+      </div>
+      <div class="contactOptions">
+        <button class="imageUserContainer">
+          <img src="/image/icon-woman.png" alt="imageUser">
+        </button>
+        <button class="addContact">
+          <img src="/static/addContact.png" alt="addContact">
+        </button>
+        <button class="optionsContainer">
+          <img src="/static/options.png" alt="options">
+        </button>
+        <button class="helpContainer">
+          <img src="/static/help.png" alt="help">
+        </button>
+      </div>
+    </aside>
+    <section id="chat">
+    </section>
 
-  <script type="module">
-    import { initChatApp } from "./main.js";
-    initChatApp();
-  </script>
+    <!-- Modal Prueba-->
+    <div id="modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Agregar Contacto</h2>
+        <form id="contactForm">
+          <div class="form-group">
+            <label for="name">Id del usuario:</label>
+            <input type="text" id="formAddContact" placeholder="Escribe el Id">
+          </div>
+          <div class="form-group">
+            <button type="submit" class="submit-button">Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</body>
+
+<script type="module">
+  import { initChatApp } from "./main.js";
+  initChatApp();
+</script>
+
 </html>
