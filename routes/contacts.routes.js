@@ -3,11 +3,14 @@ import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import db from "../database/db.js";
-import { getMessage } from "../database/contact.js";
+import { getMessage , findContactId} from "../database/contact.js";
 
 dotenv.config(); 
 
 const router = express.Router();
+const database = process.env.DB_NAME;
+const secretKey = process.env.SECRET_KEY;
+
 router.use(bodyParser.json());
 
 //////////////////////////////////////////////////////////////////
@@ -20,7 +23,7 @@ router.post('/api/contact-button', async function(req, res) {
             return res.status(401).send('Acceso denegado. No se encontró el token.');
         }
         const contactId = req.body.contactId
-        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const decoded = jwt.verify(token, secretKey);
         const userId = decoded.userId;
 
         const message = await getMessage(userId, contactId) 
@@ -37,12 +40,10 @@ router.post('/api/contact-button', async function(req, res) {
 router.get('/api/contacts', async function(req, res) {
     try {
         const token = req.cookies.jwtChatOp;
-        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const decoded = jwt.verify(token, secretKey);
         const userId = decoded.userId;
-        const database = process.env.DB_NAME;
         
         const userDocRef = db.doc(`${database}/${userId}`);
-
         const collections = await userDocRef.listCollections();
         const collectionNames = collections.map(collection => collection.id);
 
@@ -54,5 +55,17 @@ router.get('/api/contacts', async function(req, res) {
     }
 });
 
+router.post('/api/review-contact', async function(req, res) {
+    try {
+        const contactId = req.body.contactId
+        console.log("Contact ID received:", contactId);
 
+        const usuario = await findContactId(contactId);
+        console.log(usuario);
+        res.status(200).send(usuario);
+    } catch (error) {
+        console.error("Error database: ", error);
+        res.status(500);
+    }
+});
 export default router;

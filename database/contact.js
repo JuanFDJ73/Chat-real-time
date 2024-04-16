@@ -2,6 +2,8 @@ import db from "../database/db.js";
 import dotenv from 'dotenv';
 dotenv.config();
 
+const database = process.env.DB_NAME;
+
 export async function  getMessage (userId, contactId){
     const mensajesUsuarioQuery = db.collection(`mensajes/${userId}/${contactId}`).orderBy("timestamp");
     const mensajesContactoQuery = db.collection(`mensajes/${contactId}/${userId}`).orderBy("timestamp");
@@ -17,4 +19,30 @@ export async function  getMessage (userId, contactId){
 
     message.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
     return message;
+}
+
+export async function findContactId(contactId) {
+    const dbRef = db.collection(`${database}`);
+    const querySnapshot = await dbRef.get();
+
+    //ruta de la imagen prueba, se hara de la base de datos
+    const img = "/image/icon-woman.png"
+
+    let userFound = false;
+    let userFoundId = null;
+    
+    querySnapshot.forEach(async users => {
+        const userId = users.id;
+        const userContent = users.data();
+        console.log('user Id:', userId);
+        //nombre de ej. se usara la ruta de la imagen
+        console.log('Contenido:', userContent.nombre);
+        if (userId === contactId) {
+            userFound = true;
+            userFoundId = userId
+            // img = userContent.image;   ejemplo 
+
+        }
+    });
+    return {userFoundId, userFound, img};
 }

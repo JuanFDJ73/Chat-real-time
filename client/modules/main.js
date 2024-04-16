@@ -41,14 +41,13 @@ function initChatApp() {
             const className = "modal-content modal-settings"
             const title = "Configuraciones"
             createModalStructure(className, title);
-            createFormAddContact();
+
         });
 
         button4.addEventListener('click', function() {
             const className = "modal-content modal-help"
             const title = "Ayuda"
             createModalStructure(className, title);
-            createFormAddContact();
         });
         
     });    

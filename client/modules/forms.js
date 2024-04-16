@@ -1,5 +1,5 @@
 // formulario
-import { apiVerifyUserId, apiVerifyContactId } from '/api.js';
+import { apiVerifyUserId, apiVerifyContactId, reviewContact} from '/api.js';
 import { scrollToBottom } from '/utils.js';
 
 export function handleSubmit(socket) {   
@@ -96,9 +96,17 @@ export function createFormAddContact() {
     input.id = 'formAddContact';
     input.placeholder = 'Escribe el Id';
 
+    // Crear la etiqueta del campo de resultado
+    const label2 = document.createElement('label');
+    label2.setAttribute('for', 'formAddContact');
+    label1.id = 'resultAddContact';
+    label2.className ='label-result'
+    label2.innerText = 'ﾠ';
+
     // Agregar la etiqueta y el campo de entrada al div del campo de entrada
     formGroup1.appendChild(label1);
     formGroup1.appendChild(input);
+    formGroup1.appendChild(label2);
 
     // Crear el div del botón
     const formGroup2 = document.createElement('div');
@@ -121,7 +129,10 @@ export function createFormAddContact() {
         e.preventDefault();
         
         console.log('Formulario enviado');
+        const contacId = input.value
+        console.log(contacId);
         //NOTA: Hacer Validaciones, posteriormente cerrar el modal
+        reviewContact(contacId);
         input.value = ''
         removeModal();
 

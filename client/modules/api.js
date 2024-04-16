@@ -170,3 +170,25 @@ export function setContacts() {
         console.error('Error al recuperar los contactos:', error);
     });
 }
+
+export function reviewContact(contactId) {
+    fetch('/api/review-contact', {
+        method: 'POST',
+        body: JSON.stringify({ contactId }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data) {
+            contactButton(data.contactId, data.img);
+        } else {
+            console.log('No se pudo recuperar el contacto');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
