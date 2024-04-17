@@ -26,23 +26,21 @@ export async function findContactId(contactId) {
     const querySnapshot = await dbRef.get();
 
     //ruta de la imagen prueba, se hara de la base de datos
-    const img = "/image/icon-woman.png"
+    //const img = "/image/icon-woman.png"
 
-    let userFound = false;
     let userFoundId = null;
-    
+    let img = "";
     querySnapshot.forEach(async users => {
         const userId = users.id;
         const userContent = users.data();
         console.log('user Id:', userId);
         //nombre de ej. se usara la ruta de la imagen
         console.log('Contenido:', userContent.nombre);
+        console.log('imagen: ', userContent.image);
         if (userId === contactId) {
-            userFound = true;
             userFoundId = userId
-            // img = userContent.image;   ejemplo 
-
+            img = userContent.image;
         }
     });
-    return {userFoundId, userFound, img};
+    return {userFoundId, img};
 }

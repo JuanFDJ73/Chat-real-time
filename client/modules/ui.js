@@ -3,11 +3,16 @@ import { socket } from '/socket.js';
 import { hiddenWords , createSpinner, cleanSectionChat} from '/utils.js';
 import { handleSubmit } from './forms.js';
 // Gestión de elementos de la interfaz de usuario y eventos.
+
+//Posible cambio a esta funcion
 export function cleanChat() {
     const messageInput = document.getElementById('message');
     const messageContainer = document.getElementById('message-container');
-    messageInput.value = '';
-    messageContainer.innerHTML = '';
+    if (messageInput){
+        messageInput.value = '';
+        messageContainer.innerHTML = '';
+    }
+
 }
 
 export function chatOn() {
@@ -27,8 +32,10 @@ export function chatOff() {
 }
 export function cambiarTitulo(titulo) {
     const nombreContactDiv = document.getElementById('nombre-contact');
-    const h1 = nombreContactDiv.querySelector('h1');
-    h1.textContent = titulo;
+    if (nombreContactDiv){
+        const h1 = nombreContactDiv.querySelector('h1');
+        h1.textContent = titulo;
+    }
 }
 
 export function changeImgContactHeader(newImage) {

@@ -25,7 +25,6 @@ export default function initializeWebSocket(io, db) {
                 usuario: usuario,
                 userId: userId, // ID del remitente
                 contactoId: contactId, // ID del destinatario
-                image: "Ruta de la imagen",
                 timestamp: admin.firestore.FieldValue.serverTimestamp()
             };
 

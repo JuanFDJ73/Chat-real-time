@@ -10,7 +10,9 @@ export function hiddenWords(palabra) {
 
 export function scrollToBottom() {
     const messageContainer = document.getElementById('message-container');
-    messageContainer.scrollTop = messageContainer.scrollHeight;
+    if (messageContainer){
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
 }
 
 export function createSpinner() {
