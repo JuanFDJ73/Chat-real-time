@@ -44,3 +44,40 @@ export async function findContactId(contactId) {
     });
     return {userFoundId, img};
 }
+
+export async function getLatestMessageDB(userId, contactId) {
+    // Query para obtener el último mensaje enviado por el usuario al contacto
+    const lastMessageFromUserQuery = db.collection(`mensajes/${userId}/${contactId}`)
+        .orderBy("timestamp", "desc") // Ordenamos por timestamp de forma descendente
+        .limit(1); // Limitamos a 1 resultado
+
+    // Query para obtener el último mensaje enviado por el contacto al usuario
+    const lastMessageFromContactQuery = db.collection(`mensajes/${contactId}/${userId}`)
+        .orderBy("timestamp", "desc") // Ordenamos por timestamp de forma descendente
+        .limit(1); // Limitamos a 1 resultado
+
+    // Ejecutamos ambas consultas en paralelo
+    const [lastMessageFromUserSnap, lastMessageFromContactSnap] = await Promise.all([
+        lastMessageFromUserQuery.get(),
+        lastMessageFromContactQuery.get()
+    ]);
+
+    // Extraemos los documentos si existen
+    const lastMessageFromUser = lastMessageFromUserSnap.docs[0] ? { id: lastMessageFromUserSnap.docs[0].id, ...lastMessageFromUserSnap.docs[0].data() } : null;
+    const lastMessageFromContact = lastMessageFromContactSnap.docs[0] ? { id: lastMessageFromContactSnap.docs[0].id, ...lastMessageFromContactSnap.docs[0].data() } : null;
+
+    // Comparamos y seleccionamos el mensaje más reciente
+    if (lastMessageFromUser && lastMessageFromContact) {
+        if (lastMessageFromUser.timestamp.toDate() > lastMessageFromContact.timestamp.toDate()) {
+            return { ...lastMessageFromUser, sender: userId };
+        } else {
+            return { ...lastMessageFromContact, sender: contactId };
+        }
+    } else if (lastMessageFromUser) {
+        return { ...lastMessageFromUser, sender: userId };
+    } else if (lastMessageFromContact) {
+        return { ...lastMessageFromContact, sender: contactId };
+    } else {
+        return null; // No messages found
+    }
+}

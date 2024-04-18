@@ -66,6 +66,7 @@
     
     & .contact-info {
         padding-left: 10px;
+        width: 100%;
     }
 
     & .contact-title {
@@ -83,6 +84,7 @@
         /* Mismo Css que el titulo pero sin negrilla */
         overflow: hidden;
         text-overflow: ellipsis;
+        position: fixed;
     }
 }
 

@@ -39,7 +39,7 @@ export default function initializeWebSocket(io, db) {
             });
 
             // Emitir el mensaje a todos los usuarios
-            io.emit('chat message', message, userId);
+            io.emit('chat message', message, userId, contactId);
         });
     
     });

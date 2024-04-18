@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import db from "../database/db.js";
-import { getMessage , findContactId} from "../database/contact.js";
+import { getMessage , findContactId, getLatestMessageDB} from "../database/contact.js";
 
 dotenv.config(); 
 
@@ -40,16 +40,19 @@ router.post('/api/contact-button', async function(req, res) {
 router.get('/api/contacts', async function(req, res) {
     try {
         const token = req.cookies.jwtChatOp;
-        const decoded = jwt.verify(token, secretKey);
-        const userId = decoded.userId;
-        
+        const { userId } = jwt.verify(token, secretKey);
+
         const userDocRef = db.doc(`${database}/${userId}`);
         const collections = await userDocRef.listCollections();
         const collectionNames = collections.map(collection => collection.id);
 
-        console.log(collectionNames);
-        res.status(200).json(collectionNames);
-    } catch(error) {
+        // Obtener el último mensaje para cada contacto
+        const messagesPromises = collectionNames.map(contactId => getLatestMessageDB(userId, contactId));
+        const messages = await Promise.all(messagesPromises);
+        console.log(messages);
+        res.status(200).json(messages);
+
+    } catch (error) {
         console.error('Error al obtener los nombres de las subcolecciones(contactos): ', error);
         res.status(500).send('Error al obtener los nombres de las subcolecciones(contactos)');
     }

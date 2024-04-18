@@ -123,8 +123,8 @@ export function setContacts() {
     })
     .then(data => {
         if (data && data.length) {
-            data.forEach(contactId => {
-                createButton(contactId);
+            data.forEach(users => {
+                createButton(users.texto, users.userId, users.contactoId);
             });
         } else {
             console.log('No hay contactos disponibles.');
