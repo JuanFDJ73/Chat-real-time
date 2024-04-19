@@ -2,23 +2,26 @@ import db from "../database/db.js";
 import dotenv from 'dotenv';
 dotenv.config();
 
-const database = process.env.DB_NAME;
+const database = process.env.DB_NAME
+const mensajes = process.env.DB_MENSAJES
+const dataContact = process.env.DATA_CONTACT
 
 export async function  getMessage (userId, contactId){
-    const mensajesUsuarioQuery = db.collection(`mensajes/${userId}/${contactId}`).orderBy("timestamp");
-    const mensajesContactoQuery = db.collection(`mensajes/${contactId}/${userId}`).orderBy("timestamp");
+    const mensajesUsuarioQuery = db.collection(`${database}/${userId}/${contactId}/${mensajes}`).orderBy("timestamp");
+    const mensajesContactoQuery = db.collection(`${database}/${contactId}/${userId}/${mensajes}`).orderBy("timestamp");
 
     const [messageUsuarioSnap, messageContactoSnap] = await Promise.all([
         mensajesUsuarioQuery.get(),
         mensajesContactoQuery.get()
     ]);
 
-    let message = [];
-    messageUsuarioSnap.forEach(doc => message.push({ id: doc.id, ...doc.data() }));
-    messageContactoSnap.forEach(doc => message.push({ id: doc.id, ...doc.data() }));
+    const messagesUsuario = messageUsuarioSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), timestamp: new Date(doc.data().timestamp) }));
+    const messagesContacto = messageContactoSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), timestamp: new Date(doc.data().timestamp) }));
 
-    message.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
-    return message;
+    const allMessages = [...messagesUsuario, ...messagesContacto];
+    allMessages.sort((a, b) => a.timestamp - b.timestamp);
+
+    return allMessages;
 }
 
 export async function findContactId(contactId) {
@@ -46,38 +49,47 @@ export async function findContactId(contactId) {
 }
 
 export async function getLatestMessageDB(userId, contactId) {
-    // Query para obtener el último mensaje enviado por el usuario al contacto
-    const lastMessageFromUserQuery = db.collection(`mensajes/${userId}/${contactId}`)
-        .orderBy("timestamp", "desc") // Ordenamos por timestamp de forma descendente
-        .limit(1); // Limitamos a 1 resultado
+    const mensajesUsuarioQuery = db.collection(`${database}/${userId}/${contactId}/${mensajes}`).orderBy("timestamp", "desc").limit(1);
+    const mensajesContactoQuery = db.collection(`${database}/${contactId}/${userId}/${mensajes}`).orderBy("timestamp", "desc").limit(1);
 
-    // Query para obtener el último mensaje enviado por el contacto al usuario
-    const lastMessageFromContactQuery = db.collection(`mensajes/${contactId}/${userId}`)
-        .orderBy("timestamp", "desc") // Ordenamos por timestamp de forma descendente
-        .limit(1); // Limitamos a 1 resultado
-
-    // Ejecutamos ambas consultas en paralelo
-    const [lastMessageFromUserSnap, lastMessageFromContactSnap] = await Promise.all([
-        lastMessageFromUserQuery.get(),
-        lastMessageFromContactQuery.get()
+    const [latestUsuarioSnap, latestContactoSnap] = await Promise.all([
+        mensajesUsuarioQuery.get(),
+        mensajesContactoQuery.get()
     ]);
 
-    // Extraemos los documentos si existen
-    const lastMessageFromUser = lastMessageFromUserSnap.docs[0] ? { id: lastMessageFromUserSnap.docs[0].id, ...lastMessageFromUserSnap.docs[0].data() } : null;
-    const lastMessageFromContact = lastMessageFromContactSnap.docs[0] ? { id: lastMessageFromContactSnap.docs[0].id, ...lastMessageFromContactSnap.docs[0].data() } : null;
+    const lastMessageUsuario = latestUsuarioSnap.docs[0] ? {
+        id: latestUsuarioSnap.docs[0].id,
+        ...latestUsuarioSnap.docs[0].data(),
+        timestamp: new Date(latestUsuarioSnap.docs[0].data().timestamp),
+        sender: userId  // Indica que el mensaje fue enviado por el usuario
+    } : null;
 
-    // Comparamos y seleccionamos el mensaje más reciente
-    if (lastMessageFromUser && lastMessageFromContact) {
-        if (lastMessageFromUser.timestamp.toDate() > lastMessageFromContact.timestamp.toDate()) {
-            return { ...lastMessageFromUser, sender: userId };
-        } else {
-            return { ...lastMessageFromContact, sender: contactId };
-        }
-    } else if (lastMessageFromUser) {
-        return { ...lastMessageFromUser, sender: userId };
-    } else if (lastMessageFromContact) {
-        return { ...lastMessageFromContact, sender: contactId };
+    const lastMessageContacto = latestContactoSnap.docs[0] ? {
+        id: latestContactoSnap.docs[0].id,
+        ...latestContactoSnap.docs[0].data(),
+        timestamp: new Date(latestContactoSnap.docs[0].data().timestamp),
+        sender: contactId  // Indica que el mensaje fue enviado por el contacto
+    } : null;
+
+    // Comparar y devolver el mensaje más reciente con información del remitente
+    if (!lastMessageUsuario && !lastMessageContacto) {
+        return null; // No hay mensajes
+    } else if (!lastMessageUsuario) {
+        return lastMessageContacto;
+    } else if (!lastMessageContacto) {
+        return lastMessageUsuario;
     } else {
-        return null; // No messages found
+        return lastMessageUsuario.timestamp > lastMessageContacto.timestamp ? lastMessageUsuario : lastMessageContacto;
+    }
+}
+
+export async function getUsuarioContacts(userId, contactId) {
+    const docRef = db.collection(`${database}/${userId}/${contactId}`);
+    const docSnapshot = await docRef.get();
+    const nombre = docSnapshot.docs[0].data().name;
+    if (nombre) {
+        return nombre;
+    } else {
+        return contactId
     }
 }

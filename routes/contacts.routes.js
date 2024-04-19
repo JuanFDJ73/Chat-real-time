@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import db from "../database/db.js";
-import { getMessage , findContactId, getLatestMessageDB} from "../database/contact.js";
+import { getMessage , findContactId, getLatestMessageDB, getUsuarioContacts} from "../database/contact.js";
 
 dotenv.config(); 
 
@@ -27,6 +27,7 @@ router.post('/api/contact-button', async function(req, res) {
         const userId = decoded.userId;
 
         const message = await getMessage(userId, contactId) 
+        console.log(message);
         res.json(message);
     } catch(error){
         console.error('Error al recuperar y ordenar mensajes:', error);
@@ -41,20 +42,34 @@ router.get('/api/contacts', async function(req, res) {
     try {
         const token = req.cookies.jwtChatOp;
         const { userId } = jwt.verify(token, secretKey);
-
+    
         const userDocRef = db.doc(`${database}/${userId}`);
         const collections = await userDocRef.listCollections();
         const collectionNames = collections.map(collection => collection.id);
-
+    
         // Obtener el último mensaje para cada contacto
         const messagesPromises = collectionNames.map(contactId => getLatestMessageDB(userId, contactId));
-        const messages = await Promise.all(messagesPromises);
-        console.log(messages);
-        res.status(200).json(messages);
+        const lastMessages = await Promise.all(messagesPromises);
 
+        // Obtener el nombre del usuario para cada contacto
+        const usuarioPromises = collectionNames.map(contactId => getUsuarioContacts(userId, contactId));
+        const usuarios = await Promise.all(usuarioPromises);
+
+        // Preparar los datos para enviar los contactos
+        const response = collectionNames.map((contactId, index) => {
+            return {
+                userId: userId,
+                contactId: contactId,
+                usuario: usuarios[index],
+                lastMessage: lastMessages[index]
+            };
+        });
+    
+        console.log('Contactos y últimos mensajes:', response);
+        res.status(200).json(response);
     } catch (error) {
-        console.error('Error al obtener los nombres de las subcolecciones(contactos): ', error);
-        res.status(500).send('Error al obtener los nombres de las subcolecciones(contactos)');
+        console.error('Error al obtener los datos (contactos): ', error);
+        res.status(500).send('Error al obtener los datos (contactos)');
     }
 });
 

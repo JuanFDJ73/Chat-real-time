@@ -55,7 +55,7 @@ export function displayMessage(message, userId) {
     messageElement.textContent = message;
     const userLocal = localStorage.getItem('userId');
 
-    if (userId === userLocal) {
+    if (userId !== userLocal) {
         messageElement.classList.add('message-right');
     } else {
         messageElement.classList.add('message-left');

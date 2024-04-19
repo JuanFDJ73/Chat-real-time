@@ -4,6 +4,9 @@ import admin from 'firebase-admin';
 import db from "../database/db.js";
 dotenv.config();
 
+const database = process.env.DB_NAME
+const mensajes = process.env.DB_MENSAJES
+
 //Conexion con el websocket
 export default function initializeWebSocket(io, db) { 
     io.on('connection', async (socket) => {
@@ -22,15 +25,13 @@ export default function initializeWebSocket(io, db) {
             
             const nuevoMensaje = {
                 texto: message,
-                usuario: usuario,
-                userId: userId, // ID del remitente
-                contactoId: contactId, // ID del destinatario
                 timestamp: admin.firestore.FieldValue.serverTimestamp()
             };
 
             // Referencia a la colección de mensajes del usuario
-            const mensajesCollection = db.collection(`mensajes/${userId}/${contactId}`);
-    
+            const mensajesCollection = db.collection(`${database}/${userId}/${contactId}/${mensajes}`);
+            console.log(nuevoMensaje)
+            console.log(`${database}/${userId}/${contactId}/${mensajes}`)
             // Crear un nuevo documento con un ID automático y guardar el nuevo mensaje
             mensajesCollection.add(nuevoMensaje).then((docRef) => {
                 console.log('Mensaje guardado en Firestore con ID:', docRef.id);

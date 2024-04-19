@@ -7,6 +7,6 @@ export function setupSocketListeners(socket, displayMessage, scrollToBottom) {
     socket.on('chat message', (message, userId, contacId) => {
         displayMessage(message, userId);
         scrollToBottom();
-        updateContactButtons(message, userId, contacId);
+        updateContactButtons(message, contacId);
     });
 }

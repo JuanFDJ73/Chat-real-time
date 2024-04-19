@@ -1,7 +1,8 @@
 import { falseLoading, createChatSection} from '/ui.js';
 import { removeButtonClicked } from '/utils.js';
 import { contactButton } from '/api.js';
-export function  createButton(message, userId,contactId) {
+//El userId posteriormente se usara mostrar el simbolo del enviado (si fue el ultimo mensaje)
+export function  createButton(message, userId, contactId) {
     const button = document.createElement('button');
     button.classList.add('contacts-menu');
     button.id = contactId;
@@ -19,12 +20,12 @@ export function  createButton(message, userId,contactId) {
 
     // Crear Nombre del contacto
     const titleSpan = document.createElement('div');
-    titleSpan.textContent = userId; // Usar contactId como título, se cambiara por el nobmre que asigne el usuario
+    titleSpan.textContent = contactId;
     titleSpan.classList.add('contact-title');
 
     // Crear ultimo chat
     const chatSpan = document.createElement('div');
-    chatSpan.textContent = message; //ultimo mensaje
+    chatSpan.textContent = message.texto; //ultimo mensaje
     chatSpan.classList.add('last-message');
     chatSpan.id = `message-${contactId}`;
 
@@ -48,14 +49,7 @@ export function getImage (contactId){
     //Posible api?
 }
 
-export function getLastMessage (contactId){
-
-}
-export function getName (contactId){
-
-}
-
-export function updateContactButtons(message, userId, contactId) {
+export function updateContactButtons(message, contactId) {
     const button = document.getElementById(contactId);
     const lastMessage = document.getElementById(`message-${contactId}`);
     lastMessage.textContent = message

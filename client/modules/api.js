@@ -103,7 +103,7 @@ export function contactButton(contactId, img) {
         // Iterar a través de cada mensaje y mostrarlo
         messages.forEach(message => {
  
-            displayMessage(message.texto, message.userId);
+            displayMessage(message.texto, contactId);
             
         });
         scrollToBottom();
@@ -124,7 +124,7 @@ export function setContacts() {
     .then(data => {
         if (data && data.length) {
             data.forEach(users => {
-                createButton(users.texto, users.userId, users.contactoId);
+                createButton(users.lastMessage, users.userId, users.contactId);
             });
         } else {
             console.log('No hay contactos disponibles.');
