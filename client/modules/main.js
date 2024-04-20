@@ -1,8 +1,11 @@
-import { displayMessage, userIdVisibilyOff, switchUserIdVisibility } from '/ui.js';
-import { setCookieUser, cleanCookieContact, setContacts } from '/api.js';
-import { setupSocketListeners, socket } from '/socket.js';
-import { scrollToBottom, handleEscapeKey } from '/utils.js';
-import { createModalStructure, createFormAddContact, removeModal} from './forms.js';
+import { displayMessage, scrollToBottom } from '/chat/chatInput.js';
+import { userIdVisibilyOff, switchUserIdVisibility} from '/sidebar/userIdView.js';
+import { setCookieUser, cleanCookieContact} from '/apis/cookies.js';
+import { setContacts } from '/apis/contacts.js';
+import { setupSocketListeners, socket} from '/socket/socket.js';
+import { handleEscapeKey } from '/utils.js';
+import { createModalStructure } from '/sidebar/options/modalStructure.js';
+import { createFormAddContact } from '/sidebar/options/addContact.js';
 
 function initChatApp() {
     window.onload = function() {
@@ -14,10 +17,11 @@ function initChatApp() {
 
     setupSocketListeners(socket, displayMessage, scrollToBottom);
 
-    if (document.getElementById("toggleVisibilityButton")){
-        document.getElementById("toggleVisibilityButton").addEventListener("click", switchUserIdVisibility);
-    }
+    document.getElementById("toggleVisibilityButton").addEventListener("click", switchUserIdVisibility);
+    
+    //Cerrar chat, con boton escape
     document.addEventListener('keydown', handleEscapeKey);
+    
     document.addEventListener('DOMContentLoaded', function() {
         const button1 = document.querySelector('.userContainer');
         const button2 = document.querySelector('.addContact');

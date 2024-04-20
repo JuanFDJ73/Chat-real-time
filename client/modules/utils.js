@@ -1,17 +1,17 @@
 // Funciones de utilidad
-import { cleanCookieContact } from "./api.js";
-export function hiddenWords(palabra) {
-    let hiddenWord = '';
-    for (let i = 0; i < palabra.length; i++) {
-        hiddenWord += '*';
-    }
-    return hiddenWord;
-}
+import { cleanCookieContact } from "/apis/cookies.js";
+import { cleanSectionChat } from "/chat/createChat.js";
+import { removeButtonActive } from "/sidebar/button.js";
 
-export function scrollToBottom() {
-    const messageContainer = document.getElementById('message-container');
-    if (messageContainer){
-        messageContainer.scrollTop = messageContainer.scrollHeight;
+export function falseLoading(contactId) {
+    if (contactId != localStorage.getItem('contactId')) {
+        createSpinner();
+        const spinnerContainer = document.getElementById('spinnerContainer');
+        spinnerContainer.style.display = 'flex'; // Mostrar el spinner
+    
+        setTimeout(function() {
+            spinnerContainer.style.display = 'none'; // Ocultar el spinner después de 1 segundo
+        }, 1000); // 1000 milisegundos = 1 segundo
     }
 }
 
@@ -29,32 +29,6 @@ export function createSpinner() {
     // Añadir el contenedor del spinner al final del div 'message-container'
     const messageContainer = document.getElementById('message-container');
     messageContainer.appendChild(spinnerContainer);
-}
-
-export function removeButtonClicked(button) {
-    const buttons = document.querySelectorAll('.contacts-menu');
-    
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Remover la clase 'clicked' de todos los botones
-            buttons.forEach(btn => btn.classList.remove('clicked'));
-            
-            // Agregar la clase 'clicked' al botón actual
-            this.classList.add('clicked');
-        });
-    });
-}
-
-export function removeButtonActive() {
-    const buttons = document.querySelectorAll('.contacts-menu');
-    
-    buttons.forEach(button => {
-        button.classList.remove('clicked');
-    });
-}
-export function cleanSectionChat() {
-    const chatSection = document.getElementById('chat');
-    chatSection.innerHTML = ''; // Limpiamos el contenido existente
 }
 
 export function handleEscapeKey(event) {

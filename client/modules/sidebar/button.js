@@ -1,6 +1,7 @@
-import { falseLoading, createChatSection} from '/ui.js';
-import { removeButtonClicked } from '/utils.js';
-import { contactButton } from '/api.js';
+import { falseLoading } from '../utils.js';
+import { createChatSection } from '../chat/createChat.js';
+import { contactButton } from '/apis/contacts.js';
+
 //El userId posteriormente se usara mostrar el simbolo del enviado (si fue el ultimo mensaje)
 export function  createButton(message, userId, contactId) {
     const button = document.createElement('button');
@@ -45,12 +46,33 @@ export function  createButton(message, userId, contactId) {
     document.getElementById('contacts').appendChild(button);
 }
 
-export function getImage (contactId){
-    //Posible api?
-}
+// export function getImage (contactId){
+//     //Posible api?
+// }
 
 export function updateContactButtons(message, contactId) {
-    const button = document.getElementById(contactId);
     const lastMessage = document.getElementById(`message-${contactId}`);
     lastMessage.textContent = message
+}
+
+export function removeButtonActive() {
+    const buttons = document.querySelectorAll('.contacts-menu');
+    
+    buttons.forEach(button => {
+        button.classList.remove('clicked');
+    });
+}
+
+export function removeButtonClicked(button) {
+    const buttons = document.querySelectorAll('.contacts-menu');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remover la clase 'clicked' de todos los botones
+            buttons.forEach(btn => btn.classList.remove('clicked'));
+            
+            // Agregar la clase 'clicked' al botón actual
+            this.classList.add('clicked');
+        });
+    });
 }

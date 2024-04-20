@@ -16,31 +16,26 @@ export default function initializeWebSocket(io, db) {
             console.log('a user has disconnected')
         })
     
-        socket.on('chat message', (message, userId, contactId) => {
-            console.log(message);
-            console.log("userId: " + userId);
-    
-            // contactoID sera el Id del chat del usuario(tendre su imagen, nombre y el chat en cuestion)
-            const usuario = "UsuarioPrueba"
-            
+        socket.on('chat message', (message, userId, contactId) => {         
             const nuevoMensaje = {
                 texto: message,
+                emisor: userId,
                 timestamp: admin.firestore.FieldValue.serverTimestamp()
             };
 
             // Referencia a la colección de mensajes del usuario
             const mensajesCollection = db.collection(`${database}/${userId}/${contactId}/${mensajes}`);
-            console.log(nuevoMensaje)
-            console.log(`${database}/${userId}/${contactId}/${mensajes}`)
             // Crear un nuevo documento con un ID automático y guardar el nuevo mensaje
+            let mensajeId
             mensajesCollection.add(nuevoMensaje).then((docRef) => {
                 console.log('Mensaje guardado en Firestore con ID:', docRef.id);
+                mensajeId = docRef.id;
             }).catch((error) => {
                 console.error('Error al guardar mensaje en Firestore: ', error);
             });
 
             // Emitir el mensaje a todos los usuarios
-            io.emit('chat message', message, userId, contactId);
+            io.emit('chat message', message, userId, contactId, mensajeId);
         });
     
     });
