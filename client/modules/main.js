@@ -1,18 +1,20 @@
 import { displayMessage, scrollToBottom } from '/chat/chatInput.js';
 import { userIdVisibilyOff, switchUserIdVisibility} from '/sidebar/userIdView.js';
 import { setCookieUser, cleanCookieContact} from '/apis/cookies.js';
-import { setContacts } from '/apis/contacts.js';
+import { searchContacts } from '/apis/contacts.js';
 import { setupSocketListeners, socket} from '/socket/socket.js';
 import { handleEscapeKey } from '/utils.js';
 import { createModalStructure } from '/sidebar/options/modalStructure.js';
 import { createFormAddContact } from '/sidebar/options/addContact.js';
-
+import { createFormProfile } from './sidebar/options/profile.js';
+import { getUserImage } from './apis/userProfile.js';
 function initChatApp() {
     window.onload = function() {
         setCookieUser();
         cleanCookieContact();
-        setContacts();
+        searchContacts();
         userIdVisibilyOff()
+        getUserImage();
     };
 
     setupSocketListeners(socket, displayMessage, scrollToBottom);
@@ -32,6 +34,7 @@ function initChatApp() {
             const className = "modal-content modal-user"
             const title = "Perfil"
             createModalStructure(className, title);
+            createFormProfile();
         });
 
         button2.addEventListener('click', function() {

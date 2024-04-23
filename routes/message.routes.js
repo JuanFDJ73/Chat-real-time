@@ -2,7 +2,7 @@ import express from "express";
 import jwt from 'jsonwebtoken'; 
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import db from "../database/db.js";
+import { db } from "../database/db.js";
 
 dotenv.config();
 

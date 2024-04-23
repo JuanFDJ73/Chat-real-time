@@ -1,9 +1,9 @@
 import { falseLoading } from '../utils.js';
 import { createChatSection } from '../chat/createChat.js';
-import { contactButton } from '/apis/contacts.js';
+import { functionClickContactButton } from '/apis/contacts.js';
 
 //El userId posteriormente se usara mostrar el simbolo del enviado (si fue el ultimo mensaje)
-export function  createButton(message, userId, contactId) {
+export function  createContactButton(message, userId, contactId, usuario) {
     const button = document.createElement('button');
     button.classList.add('contacts-menu');
     button.id = contactId;
@@ -21,7 +21,7 @@ export function  createButton(message, userId, contactId) {
 
     // Crear Nombre del contacto
     const titleSpan = document.createElement('div');
-    titleSpan.textContent = contactId;
+    titleSpan.textContent = usuario || contactId;
     titleSpan.classList.add('contact-title');
 
     // Crear ultimo chat
@@ -41,7 +41,7 @@ export function  createButton(message, userId, contactId) {
         removeButtonClicked(button)
         button.classList.add('clicked');
         falseLoading(contactId);
-        contactButton(contactId, img.src);
+        functionClickContactButton(contactId, img.src);
     });
     document.getElementById('contacts').appendChild(button);
 }
@@ -75,4 +75,8 @@ export function removeButtonClicked(button) {
             this.classList.add('clicked');
         });
     });
+}
+
+export function getName() {
+
 }

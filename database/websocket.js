@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'; 
 import dotenv from 'dotenv';
 import admin from 'firebase-admin';
-import db from "../database/db.js";
+import { db } from "../database/db.js";
 dotenv.config();
 
 const database = process.env.DB_NAME

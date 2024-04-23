@@ -20,7 +20,7 @@ import nameRoutes from "../routes/name.routes.js";
 import initializeWebSocket from "../database/websocket.js";
 
 
-import db from "../database/db.js";
+import { db } from "../database/db.js";
 
 dotenv.config();
 

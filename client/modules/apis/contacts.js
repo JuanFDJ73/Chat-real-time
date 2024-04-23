@@ -1,9 +1,9 @@
 import { cleanChat, displayMessage, scrollToBottom } from '../chat/chatInput.js';
 import { changeImgContactHeader } from '../chat/createChat.js';
-import { createButton } from '../sidebar/button.js';
+import { createContactButton } from '../sidebar/button.js';
 import { setCookieContact } from './cookies.js';
 
-export function contactButton(contactId, img) {
+export function functionClickContactButton(contactId, img) {
     fetch('/api/contact-button', {
         method: 'POST',
         body: JSON.stringify({ contactId }),
@@ -29,8 +29,8 @@ export function contactButton(contactId, img) {
     });
 }
 
-export function setContacts() {
-    fetch('/api/contacts')
+export function searchContacts() {
+    fetch('/api/searchContacts')
     .then(response => {
         if (response.ok) {
             return response.json();
@@ -40,7 +40,8 @@ export function setContacts() {
     .then(data => {
         if (data && data.length) {
             data.forEach(users => {
-                createButton(users.lastMessage, users.userId, users.contactId);
+                console.log('Users, SearchContacts: ',users);
+                createContactButton(users.lastMessage, users.userId, users.contactId, users.usuario);
             });
         } else {
             console.log('No hay contactos disponibles.');
@@ -52,7 +53,7 @@ export function setContacts() {
 }
 
 export function reviewContact(contactId) {
-    fetch('/api/review-contact', {
+    fetch('/api/find-contact', {
         method: 'POST',
         body: JSON.stringify({ contactId }),
         headers: {
@@ -63,7 +64,8 @@ export function reviewContact(contactId) {
     .then(data => {
         console.log(data);
         if (data) {
-            contactButton(data.contactId, data.img);
+            console.log('DATA REVIEWCONTACT',data);
+            functionClickContactButton(data.contactId, data.img);
         } else {
             console.log('No se pudo recuperar el contacto');
         }
