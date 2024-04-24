@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 dotenv.config();
 import { storage } from "../database/db.js";
 import { db } from "../database/db.js";
+import { tokenUserId } from "./cookieUserId.js";
 
 const database = process.env.DB_NAME
 const secretKey = process.env.SECRET_KEY;
@@ -67,6 +68,16 @@ const uploadImage = async (req, res) => {
     stream.end(req.file.buffer);
 };
 
+const getUserImage = async (req, res) => {
+    try {
+        const userId = await tokenUserId(req);
+        const img = await getImage(userId);
+        res.status(200).json({ image: img });
+    } catch (error) {
+        res.status(400).send('Token inválido');
+    }
+}
+
 async function getImage(userId) {
     // Obtener la imagen del usuario en la base de datos
     const userRef = db.collection(database).doc(userId);
@@ -95,4 +106,4 @@ async function deleteImage(currentImageUrl) {
     await oldFile.delete();
 }
 
-export { uploadImage, upload, getImage };
+export { uploadImage, upload, getImage, getUserImage};

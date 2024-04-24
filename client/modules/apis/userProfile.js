@@ -1,5 +1,5 @@
 import { changeImgUser } from "../sidebar/options/profile.js";
-export function getUserImage() {
+export function apiGetUserImage() {
     fetch('/api/get-user-image', {
         method: 'GET',
         headers: {

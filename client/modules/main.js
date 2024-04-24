@@ -7,14 +7,14 @@ import { handleEscapeKey } from '/utils.js';
 import { createModalStructure } from '/sidebar/options/modalStructure.js';
 import { createFormAddContact } from '/sidebar/options/addContact.js';
 import { createFormProfile } from './sidebar/options/profile.js';
-import { getUserImage } from './apis/userProfile.js';
+import { apiGetUserImage } from './apis/userProfile.js';
 function initChatApp() {
     window.onload = function() {
         setCookieUser();
         cleanCookieContact();
         searchContacts();
         userIdVisibilyOff()
-        getUserImage();
+        apiGetUserImage();
     };
 
     setupSocketListeners(socket, displayMessage, scrollToBottom);

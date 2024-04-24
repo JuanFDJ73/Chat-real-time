@@ -1,8 +1,11 @@
 import { cambiarTitulo } from '../chat/createChat.js';
 
 // Funciones para interactuar con la API.
-export function setCookieUser() {
-    fetch('/api/set-user-id')
+export async function setCookieUser() {
+    fetch('/api/set-user-id', {
+        method: 'GET',
+        credentials: 'include'
+    })
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -15,11 +18,11 @@ export function setCookieUser() {
             console.log("La cookie ha sido establecida por el servidor");
         })
         .catch(error => {
-            localStorage.setItem('userId', error.userId);
+            console.error('Error al guardar el userId:', error);
         });
 }
 
-export function cleanCookieContact() {
+export async function cleanCookieContact() {
     fetch('/api/delete-cookie-contact')
         .then(response => {
             if (response.ok) {
@@ -36,9 +39,9 @@ export function cleanCookieContact() {
 
 export function apiVerifyUserId() {
     fetch('/api/verify-user-id')
-        .then(response =>{
+        .then(response => {
             if (response.ok) {
-                return response.json(); 
+                return response.json();
             }
             throw new Error('Error al recibir el userId');
         })
@@ -50,9 +53,9 @@ export function apiVerifyUserId() {
 
 export function apiVerifyContactId() {
     fetch('/api/verify-contact-id')
-        .then(response =>{
+        .then(response => {
             if (response.ok) {
-                return response.json(); 
+                return response.json();
             }
             throw new Error('Error al recibir el userId');
         })
@@ -72,16 +75,16 @@ export function setCookieContact(contactId) {
             contactId: contactId
         })
     })
-   .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-        throw new Error('Error al recibir el contactId');
-   })
-   .then (data => {
-        localStorage.setItem('contactId', data.contactId);
-        cambiarTitulo(data.contactId);
-        console.log('ContactId guardado en localStorage:', data.contactId);
-        console.log("La cookie ha sido establecida (contacId)")
-    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Error al recibir el contactId');
+        })
+        .then(data => {
+            localStorage.setItem('contactId', data.contactId);
+            cambiarTitulo(data.contactId);
+            console.log('ContactId guardado en localStorage:', data.contactId);
+            console.log("La cookie ha sido establecida (contacId)")
+        })
 }
