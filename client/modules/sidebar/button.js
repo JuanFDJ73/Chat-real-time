@@ -46,10 +46,6 @@ export function  createContactButton(message, userId, contactId, usuario) {
     document.getElementById('contacts').appendChild(button);
 }
 
-// export function getImage (contactId){
-//     //Posible api?
-// }
-
 export function updateContactButtons(message, contactId) {
     const lastMessage = document.getElementById(`message-${contactId}`);
     lastMessage.textContent = message

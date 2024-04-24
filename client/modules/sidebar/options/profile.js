@@ -1,3 +1,4 @@
+import { apiUploadImage } from "../../apis/userProfile.js";
 export function createFormProfile(){
     //Obtener el contenido del modal
     const modalContentDiv = document.querySelector('.modal-user');
@@ -27,19 +28,7 @@ export function createFormProfile(){
         const imageFile = document.getElementById('imageInput').files[0];
 
         if (imageFile) {
-            formData.append('file', imageFile);
-
-            fetch('/api/upload-image', {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.text())
-            .then(result => {
-                console.log('Success:', result);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+            apiUploadImage(imageFile, formData);
         } else {
             alert('Please select a file to upload.');
         }

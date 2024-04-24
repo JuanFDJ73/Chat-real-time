@@ -12,14 +12,14 @@ router.use(bodyParser.json());
 
 router.post('/api/upload-image', upload.single('file'), uploadImage);
 
-router.get('/api/get-user-image', (req, res) => {
+router.get('/api/get-user-image', async (req, res) => {
     const token = req.cookies.jwtChatOp;
     if (!token) {
         return res.status(401).send('Acceso denegado');
     }
     const { userId } = jwt.verify(token, secretKey);
     try {
-        const img = getImage(userId);
+        const img = await getImage(userId);
         res.status(200).json({ image: img });
     } catch (error) {
         res.status(400).send('Token inválido');
