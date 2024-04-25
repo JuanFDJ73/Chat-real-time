@@ -1,89 +1,92 @@
+import jwt from 'jsonwebtoken';
 import { db } from "../database/db.js";
 import dotenv from 'dotenv';
+import NodeCache from 'node-cache';
+import { getLatestMessageDB, getMessage } from './message.js';
 dotenv.config();
 
+const cache = new NodeCache();
+
 const database = process.env.DB_NAME
-const mensajes = process.env.DB_MENSAJES
+const secretKey = process.env.SECRET_KEY;
 const dataContact = process.env.DATA_CONTACT
 
-export async function  getMessage (userId, contactId){
-    const mensajesUsuarioQuery = db.collection(`${database}/${userId}/${contactId}/${mensajes}`).orderBy("timestamp");
-    const mensajesContactoQuery = db.collection(`${database}/${contactId}/${userId}/${mensajes}`).orderBy("timestamp");
-
-    const [messageUsuarioSnap, messageContactoSnap] = await Promise.all([
-        mensajesUsuarioQuery.get(),
-        mensajesContactoQuery.get()
-    ]);
-
-    const messagesUsuario = messageUsuarioSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), timestamp: new Date(doc.data().timestamp) }));
-    const messagesContacto = messageContactoSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), timestamp: new Date(doc.data().timestamp) }));
-
-    const allMessages = [...messagesUsuario, ...messagesContacto];
-    allMessages.sort((a, b) => a.timestamp - b.timestamp);
-
-    return allMessages;
-}
-
-export async function findContactId(contactId) {
-    const dbRef = db.collection(`${database}`);
-    const querySnapshot = await dbRef.get();
-
-    //ruta de la imagen prueba, se hara de la base de datos
-    //const img = "/image/icon-woman.png"
-
-    let userFoundId = null;
-    let img = "";
-    querySnapshot.forEach(async users => {
-        const userId = users.id;
-        const userContent = users.data();
-        console.log('user Id:', userId);
-        //nombre de ej. se usara la ruta de la imagen
-        console.log('Contenido:', userContent.nombre);
-        console.log('imagen: ', userContent.image);
-        if (userId === contactId) {
-            userFoundId = userId
-            img = userContent.image;
+//Route
+const contactButtonClick = async (req, res) => {
+    try{
+        const token = req.cookies.jwtChatOp;
+        if (!token) {
+            return res.status(401).send('Acceso denegado. No se encontró el token.');
         }
-    });
-    return {userFoundId, img};
-}
+        const contactId = req.body.contactId
+        const decoded = jwt.verify(token, secretKey);
+        const userId = decoded.userId;
 
-export async function getLatestMessageDB(userId, contactId) {
-    const mensajesUsuarioQuery = db.collection(`${database}/${userId}/${contactId}/${mensajes}`).orderBy("timestamp", "desc").limit(1);
-    const mensajesContactoQuery = db.collection(`${database}/${contactId}/${userId}/${mensajes}`).orderBy("timestamp", "desc").limit(1);
-
-    const [latestUsuarioSnap, latestContactoSnap] = await Promise.all([
-        mensajesUsuarioQuery.get(),
-        mensajesContactoQuery.get()
-    ]);
-
-    const lastMessageUsuario = latestUsuarioSnap.docs[0] ? {
-        id: latestUsuarioSnap.docs[0].id,
-        ...latestUsuarioSnap.docs[0].data(),
-        timestamp: new Date(latestUsuarioSnap.docs[0].data().timestamp),
-        sender: userId  // Indica que el mensaje fue enviado por el usuario
-    } : null;
-
-    const lastMessageContacto = latestContactoSnap.docs[0] ? {
-        id: latestContactoSnap.docs[0].id,
-        ...latestContactoSnap.docs[0].data(),
-        timestamp: new Date(latestContactoSnap.docs[0].data().timestamp),
-        sender: contactId  // Indica que el mensaje fue enviado por el contacto
-    } : null;
-
-    // Comparar y devolver el mensaje más reciente con información del remitente
-    if (!lastMessageUsuario && !lastMessageContacto) {
-        return null; // No hay mensajes
-    } else if (!lastMessageUsuario) {
-        return lastMessageContacto;
-    } else if (!lastMessageContacto) {
-        return lastMessageUsuario;
-    } else {
-        return lastMessageUsuario.timestamp > lastMessageContacto.timestamp ? lastMessageUsuario : lastMessageContacto;
+        const message = await getMessage(userId, contactId) 
+        console.log(message);
+        res.json(message);
+    } catch(error){
+        console.error('Error al recuperar y ordenar mensajes:', error);
+        res.status(500).send('Ocurrió un error al procesar su solicitud.');
     }
 }
 
-export async function getUsuarioContacts(userId, contactId) {
+//Route
+const searchContacts = async (req, res) => {
+    try {
+        const token = req.cookies.jwtChatOp;
+        const { userId } = jwt.verify(token, secretKey);
+    
+        const userDocRef = db.doc(`${database}/${userId}`);
+        const collectionsSnapshot = await userDocRef.listCollections();
+    
+        // Obtener el último mensaje y el nombre del usuario para cada contacto de manera paralela
+        const promises = collectionsSnapshot.map(async collection => {
+            const contactId = collection.id;
+            const [lastMessage, usuario] = await Promise.all([
+                getLatestMessageDB(userId, contactId),
+                getUsuarioContacts(userId, contactId)
+            ]);
+            return { userId, contactId, usuario, lastMessage };
+        });
+        const response = await Promise.all(promises);
+    
+        console.log('Contactos y últimos mensajes:', response);
+        res.status(200).json(response);
+    } catch (error) {
+        console.error('Error al obtener los datos (contactos): ', error);
+        res.status(500).send('Error al obtener los datos (contactos)');
+    }
+}
+
+const findContactId = async (req, res) => {
+    try {
+        const contactId = req.body.contactId
+        console.log("Contact ID received:", contactId);
+
+        const usuario = await findContactIdDB(contactId);
+        console.log(usuario);
+        res.status(200).send(usuario);
+    } catch (error) {
+        console.error("Error database: ", error);
+        res.status(500);
+    }
+} 
+
+async function findContactIdDB(contactId) {
+    //Encuentra el contact y su imagen
+    const userRef = db.collection(database).doc(contactId);
+    const doc = await userRef.get();
+    let img = "";
+    if (doc.exists){
+        console.log(`Image:`, doc.data().image);
+        console.log(`contenido`, doc.data().name)
+        img = doc.data().image
+    }
+    return {contactId, img};
+}
+
+async function getUsuarioContacts(userId, contactId) {
     const docRef = db.collection(`${database}/${userId}/${contactId}`);
     const docSnapshot = await docRef.get();
     const nombre = docSnapshot.docs[0].data().name;
@@ -93,3 +96,31 @@ export async function getUsuarioContacts(userId, contactId) {
         return contactId
     }
 }
+
+async function ifBlocked(userId, contactoId) {
+    //Revisa si el contacto bloqueo al usuario
+    const cacheKey = `block_${contactoId}_${userId}`;
+    const cachedValue = cache.get(cacheKey);
+    if (cachedValue !== undefined) {
+        return cachedValue;
+    }
+
+    const dataDocRef = db.collection(database).doc(contactoId).collection(userId).doc(dataContact);
+    const doc = await dataDocRef.get();
+    if (doc.exists) {
+        const block = doc.data().block;
+        cache.set(cacheKey, block);
+        return block;
+    } else {
+        return false;
+    }
+}
+
+export {
+    contactButtonClick,
+    searchContacts,
+    findContactId,
+    ifBlocked,
+    findContactIdDB,
+    getUsuarioContacts
+};

@@ -7,8 +7,10 @@ dotenv.config();
 const router = express.Router();
 router.use(bodyParser.json());
 
+//Sube la imagen a la base de datos y actualiza la foto en el cliente
 router.post('/api/upload-image', upload.single('file'), uploadImage);
 
+//Obtiene la imagen de la base de datos y la envia al cliente
 router.get('/api/get-user-image', getUserImage);
 
 export default router;

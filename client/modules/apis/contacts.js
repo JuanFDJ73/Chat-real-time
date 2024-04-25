@@ -29,7 +29,7 @@ export function functionClickContactButton(contactId, img) {
     });
 }
 
-export function searchContacts() {
+export function apiSearchContacts() {
     fetch('/api/searchContacts')
     .then(response => {
         if (response.ok) {

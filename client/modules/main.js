@@ -1,7 +1,7 @@
 import { displayMessage, scrollToBottom } from '/chat/chatInput.js';
 import { userIdVisibilyOff, switchUserIdVisibility} from '/sidebar/userIdView.js';
 import { setCookieUser, cleanCookieContact} from '/apis/cookies.js';
-import { searchContacts } from '/apis/contacts.js';
+import { apiSearchContacts } from '/apis/contacts.js';
 import { setupSocketListeners, socket} from '/socket/socket.js';
 import { handleEscapeKey } from '/utils.js';
 import { createModalStructure } from '/sidebar/options/modalStructure.js';
@@ -12,7 +12,7 @@ function initChatApp() {
     window.onload = function() {
         setCookieUser();
         cleanCookieContact();
-        searchContacts();
+        apiSearchContacts();
         userIdVisibilyOff()
         apiGetUserImage();
     };

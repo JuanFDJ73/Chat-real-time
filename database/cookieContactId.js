@@ -1,13 +1,20 @@
-import jwt from 'jsonwebtoken'; 
+import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
 dotenv.config();
+import { tokenUserId } from './cookieUserId.js';
+import { ifBlocked } from './contact.js';
 
+const database = process.env.DB_NAME
+const secretKey = process.env.SECRET_KEY;
+const dataContact = process.env.DATA_CONTACT
 //Route
 const setContactId = async (req, res) => {
     // Crea cookie con token para ContactId
     const { contactId } = req.body;
+    const userId = tokenUserId(req);
+    const block = await ifBlocked(userId, contactId);
 
-    const token = jwt.sign({ contactId: contactId }, secretKey);
+    const token = jwt.sign({ contactId, block }, secretKey);
 
     res.cookie('contactId', token)
     res.json({ contactId: contactId });
@@ -31,7 +38,7 @@ const deleteCookieContact = async (req, res) => {
     res.send('Cookie eliminada');
 }
 
-function tokenContactId(req){
+function tokenContactId(req) {
     // Valida token
     const token = req.cookies.contactId;
     if (!token) {
@@ -41,9 +48,11 @@ function tokenContactId(req){
     return contactId;
 }
 
+
+
 export {
     setContactId,
     verifyContactId,
     deleteCookieContact,
-    tokenContactId
+    tokenContactId,
 };

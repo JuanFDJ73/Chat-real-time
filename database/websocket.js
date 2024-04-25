@@ -1,42 +1,46 @@
-import jwt from 'jsonwebtoken'; 
 import dotenv from 'dotenv';
 import admin from 'firebase-admin';
-import { db } from "../database/db.js";
+import { ifBlocked } from './contact.js';
 dotenv.config();
 
 const database = process.env.DB_NAME
 const mensajes = process.env.DB_MENSAJES
 
 //Conexion con el websocket
-export default function initializeWebSocket(io, db) { 
+export default function initializeWebSocket(io, db) {
     io.on('connection', async (socket) => {
         console.log('a user has connected')
-    
+
         socket.on('disconnect', () => {
             console.log('a user has disconnected')
         })
-    
-        socket.on('chat message', (message, userId, contactId) => {         
+
+        socket.on('chat message', async (message, userId, contactId) => {
+            const block = await ifBlocked(userId, contactId);
+            console.log('block: ', block);
+
             const nuevoMensaje = {
                 texto: message,
                 emisor: userId,
                 timestamp: admin.firestore.FieldValue.serverTimestamp()
             };
 
-            // Referencia a la colección de mensajes del usuario
-            const mensajesCollection = db.collection(`${database}/${userId}/${contactId}/${mensajes}`);
-            // Crear un nuevo documento con un ID automático y guardar el nuevo mensaje
-            let mensajeId
-            mensajesCollection.add(nuevoMensaje).then((docRef) => {
-                console.log('Mensaje guardado en Firestore con ID:', docRef.id);
-                mensajeId = docRef.id;
-            }).catch((error) => {
-                console.error('Error al guardar mensaje en Firestore: ', error);
-            });
-
-            // Emitir el mensaje a todos los usuarios
-            io.emit('chat message', message, userId, contactId, mensajeId);
-        });
+            const mensajesCollection1 = db.collection(`${database}/${userId}/${contactId}/${mensajes}`);
+        
+            // Agregar el mensaje y usar el id del mensaje para el contacto
+            const docRef = await mensajesCollection1.add(nuevoMensaje);
+            console.log('Mensaje guardado en Firestore con ID:', docRef.id);
     
+            // Enviar el mensaje con la Id
+            io.emit('chat message', message, userId, contactId, docRef.id);
+    
+            // Si NO esta bloqueado, guardar el mensaje para el contacto con el mismo Id inicial
+            if (!block) {
+                const mensajesCollection2 = db.collection(`${database}/${contactId}/${userId}/${mensajes}`);
+                await mensajesCollection2.doc(docRef.id).set(nuevoMensaje);
+                console.log('Mensaje espejo guardado en Firestore con mismo ID:', docRef.id);
+            }
+        });
+
     });
 }
