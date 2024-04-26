@@ -1,9 +1,9 @@
 import { cleanChat, displayMessage, scrollToBottom } from '../chat/chatInput.js';
-import { changeImgContactHeader } from '../chat/createChat.js';
+import { changeImgContactHeader, changeNameContactHeader } from '../chat/createChat.js';
 import { createContactButton } from '../sidebar/button.js';
 import { setCookieContact } from './cookies.js';
 
-export function functionClickContactButton(contactId, img) {
+export function functionClickContactButton(contactId, img, username) {
     fetch('/api/contact-button', {
         method: 'POST',
         body: JSON.stringify({ contactId }),
@@ -16,6 +16,7 @@ export function functionClickContactButton(contactId, img) {
         cleanChat();
         setCookieContact(contactId)
         changeImgContactHeader(img)
+        changeNameContactHeader(username)
         // Iterar a través de cada mensaje y mostrarlo
         messages.forEach(message => {
             console.log('MENSAJE: ',message)
@@ -65,7 +66,7 @@ export function reviewContact(contactId) {
         console.log(data);
         if (data) {
             console.log('DATA REVIEWCONTACT',data);
-            functionClickContactButton(data.contactId, data.img);
+            functionClickContactButton(data.contactId, data.img, data.username);
         } else {
             console.log('No se pudo recuperar el contacto');
         }

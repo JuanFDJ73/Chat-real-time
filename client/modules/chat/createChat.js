@@ -2,24 +2,24 @@ import { cleanCookieContact } from '../apis/cookies.js';
 import { socket } from '../socket/socket.js';
 import { handleSubmit } from './chatInput.js';
 
-export function createChatSection() {
+function createChatSection() {
     // Busca el elemento <section> con el id="chat"
     const chatSection = document.getElementById('chat');
 
     //Verifica que este vacio.
-    if (chatSection.children.length === 0){
+    if (chatSection.children.length === 0) {
         // Crear el div con id="contact-container" y sus elementos hijos
         const contactContainerDiv = document.createElement('div');
         contactContainerDiv.id = 'contact-container';
         contactContainerDiv.classList.add('contact-container');
-    
+
         const backButton = document.createElement('button');
         backButton.id = 'back';
         backButton.classList.add('back');
         const backImage = document.createElement('img');
         backImage.src = '/static/back.png';
         backButton.appendChild(backImage);
-        backButton.addEventListener('click', function() {
+        backButton.addEventListener('click', function () {
             cleanCookieContact();
             cleanSectionChat();
         });
@@ -30,19 +30,19 @@ export function createChatSection() {
         const iconImage = document.createElement('img');
         iconImage.src = '/static/perfil.png';
         iconContainerDiv.appendChild(iconImage);
-    
+
         const nombreContactDiv = document.createElement('div');
         nombreContactDiv.id = 'nombre-contact';
         nombreContactDiv.classList.add('nombre-contact');
         const h1 = document.createElement('h1');
         h1.textContent = '';
         nombreContactDiv.appendChild(h1);
-    
+
         // Agregar los elementos hijos al contactContainerDiv
         contactContainerDiv.appendChild(backButton);
         contactContainerDiv.appendChild(iconContainerDiv);
         contactContainerDiv.appendChild(nombreContactDiv);
-    
+
         // Crear el div con id="message-container"
         const messageContainerDiv = document.createElement('div');
         messageContainerDiv.id = 'message-container';
@@ -56,7 +56,7 @@ export function createChatSection() {
         spinnerDiv.classList.add('spinner');
         spinnerContainerDiv.appendChild(spinnerDiv);
         messageContainerDiv.appendChild(spinnerContainerDiv);
-    
+
         // Crear el formulario con id="form" y sus elementos hijos
         const form = document.createElement('form');
         form.id = 'form';
@@ -68,44 +68,57 @@ export function createChatSection() {
         const button = document.createElement('button');
         button.type = 'submit';
         button.textContent = 'Enviar';
-        
-        form.addEventListener('submit', function(e) {
+
+        form.addEventListener('submit', function (e) {
             e.preventDefault();
             handleSubmit(socket);
         });
-        
+
         form.appendChild(input);
         form.appendChild(button);
-    
+
         // Agregar los elementos al chatSection
         chatSection.appendChild(contactContainerDiv);
         chatSection.appendChild(messageContainerDiv);
         chatSection.appendChild(form);
-    
+
         // Devolver el chatSection
         return chatSection;
     }
 }
 
-export function cambiarTitulo(titulo) {
+function cambiarTitulo(titulo) {
     const nombreContactDiv = document.getElementById('nombre-contact');
-    if (nombreContactDiv){
+    if (nombreContactDiv) {
         const h1 = nombreContactDiv.querySelector('h1');
         h1.textContent = titulo;
     }
 }
 
-export function changeImgContactHeader(newImage) {
+function changeImgContactHeader(newImage) {
     const imageElement = document.querySelector('#icon-container img');
-    if(imageElement) {
+    if (imageElement && newImage != "") {
         // Cambia el atributo 'src' de la imagen al nuevo
         imageElement.src = newImage;
     } else {
-        console.log('El elemento imagen no se encontró.');
+        imageElement.src = "/static/perfil.png";
     }
 }
 
-export function cleanSectionChat() {
+function changeNameContactHeader(username) {
+    const div = document.getElementById('nombre-contact');
+    const h1 = div.querySelector('h1');
+    h1.textContent = username;
+}
+function cleanSectionChat() {
     const chatSection = document.getElementById('chat');
     chatSection.innerHTML = ''; // Limpiamos el contenido existente
+}
+
+export {
+    changeImgContactHeader,
+    cambiarTitulo,
+    cleanSectionChat,
+    createChatSection,
+    changeNameContactHeader
 }

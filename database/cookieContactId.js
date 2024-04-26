@@ -4,9 +4,8 @@ dotenv.config();
 import { tokenUserId } from './cookieUserId.js';
 import { ifBlocked } from './contact.js';
 
-const database = process.env.DB_NAME
 const secretKey = process.env.SECRET_KEY;
-const dataContact = process.env.DATA_CONTACT
+
 //Route
 const setContactId = async (req, res) => {
     // Crea cookie con token para ContactId
@@ -47,8 +46,6 @@ function tokenContactId(req) {
     const { contactId } = jwt.verify(token, secretKey);
     return contactId;
 }
-
-
 
 export {
     setContactId,

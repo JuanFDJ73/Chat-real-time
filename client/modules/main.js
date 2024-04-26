@@ -12,7 +12,9 @@ function initChatApp() {
     window.onload = function() {
         setCookieUser();
         cleanCookieContact();
+        
         apiSearchContacts();
+
         userIdVisibilyOff()
         apiGetUserImage();
     };

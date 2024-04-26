@@ -53,17 +53,26 @@ export function createFormAddContact() {
     form.appendChild(formGroup1);
     form.appendChild(formGroup2);
 
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
         e.preventDefault();
         
-        console.log('Formulario enviado');
-        const contacId = input.value
-        console.log(contacId);
-        //NOTA: Hacer Validaciones, posteriormente cerrar el modal
-        reviewContact(contacId);
-        input.value = ''
-        removeModal();
+        if (input.value !== ""){
+            console.log('Formulario enviado');
+            const contacId = input.value
+            console.log(contacId);
+            //NOTA: Hacer Validaciones, posteriormente cerrar el modal
+            reviewContact(contacId);
+            input.value = ''
+            removeModal();
+        } else {
+            label2.textContent = "El espacio esta vacio"
+        }
 
+    });
+
+    // Desaparece la advcertencia cuando se escribe en el campo
+    input.addEventListener('input', function () {
+        label2.textContent = 'ﾠ';
     });
 
     // Agregar el formulario al contenido del modal

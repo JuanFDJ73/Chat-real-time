@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { contactButtonClick, findContactId, findContactIdDB, getUsuarioContacts, searchContacts} from "../database/contact.js";
+import { contactButtonClick, findContactId, searchContacts} from "../database/contact.js";
 
 
 const router = express.Router();

@@ -13,7 +13,8 @@ const dataContact = process.env.DATA_CONTACT
 
 //Route
 const contactButtonClick = async (req, res) => {
-    try{
+    //Funcionalidad del button contact, trae los mensajes de la base de datos
+    try {
         const token = req.cookies.jwtChatOp;
         if (!token) {
             return res.status(401).send('Acceso denegado. No se encontró el token.');
@@ -22,10 +23,10 @@ const contactButtonClick = async (req, res) => {
         const decoded = jwt.verify(token, secretKey);
         const userId = decoded.userId;
 
-        const message = await getMessage(userId, contactId) 
+        const message = await getMessage(userId, contactId)
         console.log(message);
         res.json(message);
-    } catch(error){
+    } catch (error) {
         console.error('Error al recuperar y ordenar mensajes:', error);
         res.status(500).send('Ocurrió un error al procesar su solicitud.');
     }
@@ -33,24 +34,25 @@ const contactButtonClick = async (req, res) => {
 
 //Route
 const searchContacts = async (req, res) => {
+    //Busca todos los contactos que tenga el usuario en la DB
     try {
         const token = req.cookies.jwtChatOp;
         const { userId } = jwt.verify(token, secretKey);
-    
+
         const userDocRef = db.doc(`${database}/${userId}`);
         const collectionsSnapshot = await userDocRef.listCollections();
-    
+
         // Obtener el último mensaje y el nombre del usuario para cada contacto de manera paralela
         const promises = collectionsSnapshot.map(async collection => {
             const contactId = collection.id;
             const [lastMessage, usuario] = await Promise.all([
                 getLatestMessageDB(userId, contactId),
-                getUsuarioContacts(userId, contactId)
+                getUserNameContact(userId, contactId)
             ]);
             return { userId, contactId, usuario, lastMessage };
         });
         const response = await Promise.all(promises);
-    
+
         console.log('Contactos y últimos mensajes:', response);
         res.status(200).json(response);
     } catch (error) {
@@ -59,7 +61,9 @@ const searchContacts = async (req, res) => {
     }
 }
 
+//Route
 const findContactId = async (req, res) => {
+    //Busca si el contacto que busca el usuario existe.
     try {
         const contactId = req.body.contactId
         console.log("Contact ID received:", contactId);
@@ -71,22 +75,23 @@ const findContactId = async (req, res) => {
         console.error("Error database: ", error);
         res.status(500);
     }
-} 
+}
 
 async function findContactIdDB(contactId) {
     //Encuentra el contact y su imagen
     const userRef = db.collection(database).doc(contactId);
     const doc = await userRef.get();
-    let img = "";
-    if (doc.exists){
+    if (doc.exists) {
         console.log(`Image:`, doc.data().image);
-        console.log(`contenido`, doc.data().name)
-        img = doc.data().image
+        console.log(`contenido`, doc.data().username)
+        const username = doc.data().username;
+        const img = doc.data().image;
+        return { contactId, img , username};
     }
-    return {contactId, img};
 }
 
-async function getUsuarioContacts(userId, contactId) {
+async function getUserNameContact(userId, contactId) {
+    //Obtiene el nombre que el usuario le asigno al contacto, Si no tiene, trae el ContactId
     const docRef = db.collection(`${database}/${userId}/${contactId}`);
     const docSnapshot = await docRef.get();
     const nombre = docSnapshot.docs[0].data().name;
@@ -122,5 +127,5 @@ export {
     findContactId,
     ifBlocked,
     findContactIdDB,
-    getUsuarioContacts
+    getUserNameContact
 };
