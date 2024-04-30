@@ -1,7 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import { uploadImage, upload, getUserImage} from "../database/image.js";
+import { uploadImage, getUserImage} from "../database/image.js";
+import { upload } from "../database/multer.js";
 dotenv.config();
 
 const router = express.Router();

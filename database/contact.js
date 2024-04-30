@@ -3,6 +3,7 @@ import { db } from "../database/db.js";
 import dotenv from 'dotenv';
 import NodeCache from 'node-cache';
 import { getLatestMessageDB, getMessage } from './message.js';
+import { getUserNameContact } from './contactName.js';
 dotenv.config();
 
 const cache = new NodeCache();
@@ -90,17 +91,7 @@ async function findContactIdDB(contactId) {
     }
 }
 
-async function getUserNameContact(userId, contactId) {
-    //Obtiene el nombre que el usuario le asigno al contacto, Si no tiene, trae el ContactId
-    const docRef = db.collection(`${database}/${userId}/${contactId}`);
-    const docSnapshot = await docRef.get();
-    const nombre = docSnapshot.docs[0].data().name;
-    if (nombre) {
-        return nombre;
-    } else {
-        return contactId
-    }
-}
+
 
 async function ifBlocked(userId, contactoId) {
     //Revisa si el contacto bloqueo al usuario
@@ -126,6 +117,5 @@ export {
     searchContacts,
     findContactId,
     ifBlocked,
-    findContactIdDB,
-    getUserNameContact
+    findContactIdDB
 };

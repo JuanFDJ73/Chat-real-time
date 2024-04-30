@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import multer from 'multer';
 import jwt from 'jsonwebtoken';
 dotenv.config();
 import { storage } from "../database/db.js";
@@ -8,13 +7,6 @@ import { tokenUserId } from "./cookieUserId.js";
 
 const database = process.env.DB_NAME
 const secretKey = process.env.SECRET_KEY;
-
-const upload = multer({
-    storage: multer.memoryStorage(),
-    limits: {
-        fileSize: 5 * 1024 * 1024 // 5 MB tamaño maximo
-    }
-});
 
 const uploadImage = async (req, res) => {
     if (!req.file) {
@@ -106,4 +98,4 @@ async function deleteImage(currentImageUrl) {
     await oldFile.delete();
 }
 
-export { uploadImage, upload, getImage, getUserImage};
+export { uploadImage, getImage, getUserImage};
