@@ -13,8 +13,10 @@ router.use(bodyParser.json());
 //Obtiene el nick de la base de datos
 router.get('/api/get-user-nick', getUserNick);
 
+//Actualiza el nick de la base de datos
 router.post('/api/upload-user-nick', uploadUserNick);
 
+//Borra el nick de la base de datos
 router.delete('/api/delete-user-nick', deleteUserNick);
 
 export default router;
