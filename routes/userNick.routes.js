@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import { deleteUserNick, getUserNick, uploadUserNick } from "../database/userNick";
+import { deleteUserNick, getUserNick, uploadUserNick } from "../database/userNick.js";
 
 dotenv.config();
 

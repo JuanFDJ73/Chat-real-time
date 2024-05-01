@@ -23,6 +23,7 @@ async function deleteDbUserName (userId){
 }
 
 export {
+    getDbUserName,
     updateDbUserName,
     deleteDbUserName
 }

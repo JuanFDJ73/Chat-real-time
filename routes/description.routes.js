@@ -1,21 +1,26 @@
 import express from "express";
-import jwt from 'jsonwebtoken'; 
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import { db } from "../database/db.js";
+import { getContactDescription } from "../database/contactDescription.js";
+import { deleteUserDescription, getUserDescription, updateUserDescription } from "../database/userDescription.js";
 
 dotenv.config();
 
 const router = express.Router();
 router.use(bodyParser.json());
+//Contact
+//Obtener la descripción del contact
+router.get('/api/get-contact-description', getContactDescription);
 
-////////////////////////////////
-const contactoPrueba = "contactoId"
-////////////////////////////////
+//User
+//Obtener la descripción del usuario
+router.get('/api/get-user-description', getUserDescription);
 
-router.get('/api/description', async function(req, res) {
+//Cambiar la descripción del usuario
+router.post('/api/update-user-description', updateUserDescription);
 
-});
+//Borrar la descripción del usuario
+router.delete('/api/delete-user-description', deleteUserDescription);
 
 
 export default router;

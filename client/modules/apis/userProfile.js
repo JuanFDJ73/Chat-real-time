@@ -21,7 +21,7 @@ export function apiGetUserImage() {
 
 export function apiUploadImage(imageFile, formData) {
     formData.append('file', imageFile);
-    fetch('/api/upload-image', {
+    fetch('/api/user-upload-image', {
         method: 'POST',
         body: formData,
     })

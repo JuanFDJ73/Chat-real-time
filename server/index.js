@@ -16,7 +16,8 @@ import cookieUserRoutes from "../routes/cookieUser.routes.js";
 import descriptionRoutes from "../routes/description.routes.js";
 import imageRoutes from "../routes/image.routes.js";
 import messageRoutes from "../routes/message.routes.js";
-// import nameRoutes from "../routes/name.routes.js";
+import userName from "../routes/userName.routes.js";
+import userNick from "../routes/userNick.routes.js";
 import initializeWebSocket from "../database/websocket.js";
 
 
@@ -59,7 +60,8 @@ app.use(cookieUserRoutes);
 app.use(descriptionRoutes);
 app.use(imageRoutes);
 app.use(messageRoutes);
-app.use(nameRoutes);
+app.use(userName);
+app.use(userNick);
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
