@@ -1,6 +1,8 @@
 import { db } from "../database/db.js";
 import dotenv from 'dotenv';
 import NodeCache from 'node-cache';
+import { tokenUserId } from "./cookieUserId.js";
+import { tokenContactId } from "./cookieContactId.js";
 dotenv.config();
 
 const cache = new NodeCache();
@@ -37,7 +39,43 @@ async function getLatestMessageDB(userId, contactId) {
     return lastMessageUsuario;
 }
 
+const deleteMessage = async (req, res) => {
+    //Elimina un mensaje del chat
+    try {
+        const userId = tokenUserId(req);
+        const contactId = tokenContactId(req);
+        const messageId = req.body.messageId;
+        const dbRef = db.collection(`${database}/${userId}/${contactId}/${mensajes}`).doc(messageId);
+        await dbRef.delete();
+        res.status(200).send("Mensaje eliminado correctamente");
+    } catch (error) {
+        console.error("Error al eliminar el mensaje: ", error);
+        res.status(500).send("No se pudo eliminar el mensaje debido a un error");
+    }
+}
+
+
+const updateMessage = async (req, res) => {
+    //Actualiza un mensaje del chat
+    try {
+        const userId = tokenUserId(req);
+        const contactId = tokenContactId(req);
+        const messageId = req.body.messageId;
+        const messageUpdate = {
+            texto: req.body.messageUpdate,
+        }
+        const dbRef = db.collection(`${database}/${userId}/${contactId}/${mensajes}`).doc(messageId);
+        await dbRef.update(messageUpdate);
+        res.status(200).send("Mensaje actualizado correctamente");
+    } catch (error) {
+        console.error("Error al actualizar el mensaje: ", error);
+        res.status(500).send("No se pudo actualizar el mensaje debido a un error");
+    }
+}
+
 export {
     getMessage,
-    getLatestMessageDB
+    getLatestMessageDB,
+    deleteMessage,
+    updateMessage
 }
