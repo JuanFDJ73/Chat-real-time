@@ -3,7 +3,6 @@ dotenv.config();
 import { db } from "../database/db.js";
 
 const database = process.env.DB_NAME
-const secretKey = process.env.SECRET_KEY;
 
 async function getImage(userId) {
     // Obtener la imagen del usuario (sea user o contact) en la base de datos

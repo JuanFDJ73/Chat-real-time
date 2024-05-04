@@ -4,6 +4,7 @@ dotenv.config();
 
 const database = process.env.DB_NAME
 
+//Revisar
 async function getUserNameContact(userId, contactId) {
     //Obtiene el nombre que el usuario le asigno al contacto, Si no tiene, trae el ContactId
     const docRef = db.collection(`${database}/${userId}/${contactId}`);

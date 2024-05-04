@@ -1,12 +1,7 @@
 import express from "express";
-import dotenv from "dotenv";
-import bodyParser from "body-parser";
 import { deleteUserNick, getUserNick, uploadUserNick } from "../database/userNick.js";
 
-dotenv.config();
-
 const router = express.Router();
-router.use(bodyParser.json());
 
 //USERNICK: Nombre que el usuario le asigno a un contacto
 

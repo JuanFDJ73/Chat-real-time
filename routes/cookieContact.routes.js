@@ -1,7 +1,5 @@
 import express from "express";
 import { deleteCookieContact, setContactId, verifyContactId } from "../database/cookieContactId.js";
-import dotenv from "dotenv";
-dotenv.config();
 
 const router = express.Router(); 
 

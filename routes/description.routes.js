@@ -1,13 +1,9 @@
 import express from "express";
-import dotenv from "dotenv";
-import bodyParser from "body-parser";
 import { getContactDescription } from "../database/contactDescription.js";
 import { deleteUserDescription, getUserDescription, updateUserDescription } from "../database/userDescription.js";
 
-dotenv.config();
-
 const router = express.Router();
-router.use(bodyParser.json());
+
 //Contact
 //Obtener la descripción del contact
 router.get('/api/get-contact-description', getContactDescription);

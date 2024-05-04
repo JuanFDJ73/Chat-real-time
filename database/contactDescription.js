@@ -6,6 +6,7 @@ dotenv.config();
 const database = process.env.DB_NAME
 
 const getContactDescription = async (req, res) => {
+    //Obtiene la descripción del contacto
     try {
         const contactId = await tokenContactId(req);
         const dbRef = db.collection(database).doc(contactId);

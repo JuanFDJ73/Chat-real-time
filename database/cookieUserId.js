@@ -24,6 +24,7 @@ const setUserId = async (req, res) => {
 }
 
 //Route
+//Revisar funcionamiento
 const verifyUserId = async (req, res) => {
     try {
         const userId = tokenUserId(req);

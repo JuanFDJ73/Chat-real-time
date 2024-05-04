@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import { db } from "../database/db.js";
 import dotenv from 'dotenv';
 import NodeCache from 'node-cache';
@@ -10,7 +9,6 @@ dotenv.config();
 const cache = new NodeCache();
 
 const database = process.env.DB_NAME
-const secretKey = process.env.SECRET_KEY;
 const dataContact = process.env.DATA_CONTACT
 
 //Route
@@ -85,7 +83,7 @@ async function findContactIdDB(contactId) {
 }
 
 async function ifBlocked(userId, contactoId) {
-    //Revisa si el contacto bloqueo al usuario
+    //Revisa si el contacto bloqueo al usuario y guarda el estado en cache
     const cacheKey = `block_${contactoId}_${userId}`;
     const cachedValue = cache.get(cacheKey);
     if (cachedValue !== undefined) {

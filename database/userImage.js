@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import jwt from 'jsonwebtoken';
 dotenv.config();
 import { storage } from "../database/db.js";
 import { db } from "../database/db.js";
@@ -7,7 +6,6 @@ import { tokenUserId } from "./cookieUserId.js";
 import { getImage } from "./contactImage.js";
 
 const database = process.env.DB_NAME
-const secretKey = process.env.SECRET_KEY;
 
 //Route
 const userUploadImage = async (req, res) => {

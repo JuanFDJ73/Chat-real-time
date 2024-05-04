@@ -20,6 +20,7 @@ const setContactId = async (req, res) => {
 }
 
 //Route
+//Revisar funcionamiento
 const verifyContactId = async (req, res) => {
     //Verifica token, si es correcto envia de respuesta el contactId
     try {
