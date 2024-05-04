@@ -15,12 +15,7 @@ const userUploadImage = async (req, res) => {
         return res.status(400).send('No file uploaded.');
     }
 
-    const token = req.cookies.jwtChatOp;
-    if (!token) {
-        return res.status(401).send('Acceso denegado');
-    }
-
-    const { userId } = jwt.verify(token, secretKey);
+    const userId = tokenUserId(req);
     const currentImageUrl = await getImage(userId);
 
     const bucket = storage.bucket(); // Obtener el bucket de Firebase Storage

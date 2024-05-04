@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import NodeCache from 'node-cache';
 import { getLatestMessageDB, getMessage } from './message.js';
 import { getUserNameContact } from './contactName.js';
+import { tokenUserId } from './cookieUserId.js';
 dotenv.config();
 
 const cache = new NodeCache();
@@ -16,14 +17,8 @@ const dataContact = process.env.DATA_CONTACT
 const contactButtonClick = async (req, res) => {
     //Funcionalidad del button contact, trae los mensajes de la base de datos
     try {
-        const token = req.cookies.jwtChatOp;
-        if (!token) {
-            return res.status(401).send('Acceso denegado. No se encontró el token.');
-        }
+        const userId = tokenUserId(req);
         const contactId = req.body.contactId
-        const decoded = jwt.verify(token, secretKey);
-        const userId = decoded.userId;
-
         const message = await getMessage(userId, contactId)
         console.log(message);
         res.json(message);
@@ -37,9 +32,7 @@ const contactButtonClick = async (req, res) => {
 const searchContacts = async (req, res) => {
     //Busca todos los contactos que tenga el usuario en la DB
     try {
-        const token = req.cookies.jwtChatOp;
-        const { userId } = jwt.verify(token, secretKey);
-
+        const userId = tokenUserId(req);
         const userDocRef = db.doc(`${database}/${userId}`);
         const collectionsSnapshot = await userDocRef.listCollections();
 
@@ -90,8 +83,6 @@ async function findContactIdDB(contactId) {
         return { contactId, img , username};
     }
 }
-
-
 
 async function ifBlocked(userId, contactoId) {
     //Revisa si el contacto bloqueo al usuario

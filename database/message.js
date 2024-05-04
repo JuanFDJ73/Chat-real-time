@@ -1,11 +1,8 @@
 import { db } from "../database/db.js";
 import dotenv from 'dotenv';
-import NodeCache from 'node-cache';
 import { tokenUserId } from "./cookieUserId.js";
 import { tokenContactId } from "./cookieContactId.js";
 dotenv.config();
-
-const cache = new NodeCache();
 
 const database = process.env.DB_NAME
 const mensajes = process.env.DB_MENSAJES
@@ -53,7 +50,6 @@ const deleteMessage = async (req, res) => {
         res.status(500).send("No se pudo eliminar el mensaje debido a un error");
     }
 }
-
 
 const updateMessage = async (req, res) => {
     //Actualiza un mensaje del chat
