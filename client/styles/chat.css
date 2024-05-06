@@ -7,30 +7,59 @@
   flex-direction: column-reverse;
   gap: 10px;
   align-items: flex-start;
+  position: relative;
 
-    /* Mensaje del chat propio */
+  & .message-right, .message-left {
+    display: flex;
+    align-items: center;
+    max-width: 60%;
+  }  
+
   & .message-right {
     align-self: end;
-    padding: 10px;
-    background-color: #bee3ef; /* Color de fondo para los mensajes */
-    border-radius: 10px; /* Mensajes con bordes redondeados */
-    width: fit-content;
-    max-width: 80%; /* Máximo ancho de mensaje */
-    text-align: left;
-    margin: 0 2%;
+    margin-right: 2%;
   }
 
-  /* Mensaje del chat del otro usuario */
   & .message-left {
-    align-self: flex-start; /* Alinea los mensajes a la izquierda */
-    padding: 10px;
-    background-color: #e0e0e0; /* Color de fondo para los mensajes */
-    border-radius: 10px; /* Mensajes con bordes redondeados */
-    width: fit-content;
-    max-width: 80%; /* Máximo ancho de mensaje */
-    text-align: left;
-    margin: 0 0 0 1%
+    flex-direction: row-reverse;
+    margin-left: 1%;
   }
+
+  & .message-options {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    background-color: #ccc;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.6s;
+    margin: 0 6px 0 6px;
+  }
+
+  & .message-right:hover .message-options,
+  .message-left:hover .message-options {
+    opacity: 1; /* boton se vuelve visible al pasar el mouse */
+  }
+
+  & .message-content-right, .message-content-left {
+    display: flex;
+    padding: 10px;
+    border-radius: 10px;
+    width: fit-content;
+    text-align: left;
+    margin-left: 1%;
+  }
+
+  & .message-content-right {
+    flex-direction: row-reverse;
+    background-color: #bee3ef;
+  }
+  
+  & .message-content-left {
+    background-color: #e0e0e0;
+  }
+
 }
 
 

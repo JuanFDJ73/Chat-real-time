@@ -29,19 +29,39 @@ export function handleSubmit(socket) {
 }
 export function displayMessage(message, userId, mensajeId, timestamp) {
     const messageContainer = document.getElementById('message-container');
-    console.log ("Pruebas con displayMessage: " + userId)
-    const messageElement = document.createElement('div');
-    messageElement.textContent = message;
-    messageElement.id = mensajeId;
-    const userLocal = localStorage.getItem('userId');
+    console.log ("Pruebas con displayMessage: " , userId);
 
+    // Contenedor general para cada mensaje
+    const messageElement = document.createElement('div');
+    messageElement.id = mensajeId;
+
+    // Botón de opciones del mensaje
+    const optionsButton = document.createElement('button');
+    optionsButton.classList.add('message-options');
+    optionsButton.innerHTML = '⋮' 
+
+    // Contenido del mensaje
+    const messageContent = document.createElement('div');
+    messageContent.textContent = message;
+
+    // Determinar la alineación del mensaje basado en si el usuario es el emisor o no
+    const userLocal = localStorage.getItem('userId');
     if (userId === userLocal) {
         messageElement.classList.add('message-right');
+        messageContent.classList.add('message-content-right');
     } else {
         messageElement.classList.add('message-left');
+        messageContent.classList.add('message-content-left');
     }
+
+    // Agregando elementos al contenedor de mensaje
+    messageElement.appendChild(optionsButton);
+    messageElement.appendChild(messageContent);
+
+    // Insertar el nuevo mensaje en el contenedor
     messageContainer.insertAdjacentElement('afterBegin', messageElement);
 }
+
 
 // Posible cambio: para guardar el mensaje en un borrador aun cuando cambie de contacto.
 export function cleanChat() {
@@ -58,4 +78,8 @@ export function scrollToBottom() {
     if (messageContainer){
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
+}
+
+function optionMessage(){
+
 }
