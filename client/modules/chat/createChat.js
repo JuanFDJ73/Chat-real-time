@@ -1,4 +1,5 @@
 import { cleanCookieContact } from '../apis/cookies.js';
+import { removeButtonActive } from '../sidebar/button.js';
 import { socket } from '../socket/socket.js';
 import { handleSubmit } from './chatInput.js';
 
@@ -22,6 +23,7 @@ function createChatSection() {
         backButton.addEventListener('click', function () {
             cleanCookieContact();
             cleanSectionChat();
+            removeButtonActive();
         });
 
         const iconContainerDiv = document.createElement('div');
@@ -29,6 +31,9 @@ function createChatSection() {
         iconContainerDiv.classList.add('icon');
         const iconImage = document.createElement('img');
         iconImage.src = '/static/perfil.png';
+        iconContainerDiv.addEventListener('click', function() {
+            openImageModal(iconImage.src);
+        });
         iconContainerDiv.appendChild(iconImage);
 
         const nombreContactDiv = document.createElement('div');
@@ -113,6 +118,26 @@ function changeNameContactHeader(username) {
 function cleanSectionChat() {
     const chatSection = document.getElementById('chat');
     chatSection.innerHTML = ''; // Limpiamos el contenido existente
+}
+
+function openImageModal(img) {
+    const modal = document.createElement('div');
+    modal.classList.add('modal-img-contact');
+    modal.addEventListener('click', function() {
+        modal.style.display = 'none';
+        document.body.removeChild(modal);
+    });
+
+    const modalImg = document.createElement('img');
+    modalImg.classList.add('modal-img-contact-content');
+    modalImg.src = img;
+    
+    modalImg.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+
+    modal.appendChild(modalImg);
+    document.body.appendChild(modal);
 }
 
 export {
