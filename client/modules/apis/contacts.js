@@ -3,7 +3,7 @@ import { changeImgContactHeader, changeNameContactHeader } from '../chat/createC
 import { createContactButton } from '../sidebar/button.js';
 import { setCookieContact } from './cookies.js';
 
-export function functionClickContactButton(contactId, img, username) {
+export function apiFunctionClickContactButton(contactId, img, username) {
     fetch('/api/contact-button', {
         method: 'POST',
         body: JSON.stringify({ contactId }),
@@ -42,6 +42,7 @@ export function apiSearchContacts() {
         if (data && data.length) {
             data.forEach(users => {
                 console.log('Users, SearchContacts: ',users);
+
                 createContactButton(users.lastMessage, users.userId, users.contactId, users.usuario);
             });
         } else {
@@ -66,10 +67,33 @@ export function reviewContact(contactId) {
         console.log(data);
         if (data) {
             console.log('DATA REVIEWCONTACT',data);
-            functionClickContactButton(data.contactId, data.img, data.username);
+            apiFunctionClickContactButton(data.contactId, data.img, data.username);
         } else {
             console.log('No se pudo recuperar el contacto');
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+export async function apiGetContactImage(contactId) {
+    return fetch('/api/get-contact-image', {
+        method: 'POST',
+        body: JSON.stringify({ contactId }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al obtener la imagen del usuario');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Imagen del usuario:', data.image);
+        return data.image;
     })
     .catch(error => {
         console.error('Error:', error);

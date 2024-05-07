@@ -62,14 +62,23 @@
     }
     & .contacts-menu img {
         width: 20%;
-    }
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center;
+        margin-right: 10px;
+        aspect-ratio: 1 / 1;
+    }    
     
     & .contact-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         padding-left: 10px;
         width: 100%;
     }
 
     & .contact-title {
+        width: 15vw;
         text-align: left;
         font-weight: bold;
         font-size: 1.2em;
@@ -81,10 +90,11 @@
     
     & .last-message {
         white-space: nowrap;
-        /* Mismo Css que el titulo pero sin negrilla */
         overflow: hidden;
         text-overflow: ellipsis;
-        position: fixed;
+        width: 15vw;
+        margin: 10px 0 0 0;
+        text-align: left;
     }
 }
 
@@ -118,6 +128,10 @@
 .contactOptions button img {
     height: 75%; 
     width: auto; 
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
     transition: opacity 0.3s ease; /* Transición suave para el efecto de opacidad */
 }
 
