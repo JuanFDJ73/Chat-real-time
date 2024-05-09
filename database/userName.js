@@ -3,13 +3,15 @@ import dotenv from "dotenv";
 import { tokenUserId } from "./cookieUserId.js";
 dotenv.config();
 
+const database = process.env.DB_NAME
+
 const getDbUserName = async (req, res) => {
     try {
         const userId = tokenUserId(req);
         const dbRef = db.collection(database).doc(userId)
         const doc = await dbRef.get();
         const username = doc.data().username;
-        res.status(200).send(username);
+        res.status(200).send({ userName: username });
     } catch (error) {
         res.status(404).send("No se encontró el username del usuario");
     }
@@ -18,7 +20,7 @@ const getDbUserName = async (req, res) => {
 const updateDbUserName = async (req, res) => {
     try {
         const userId = tokenUserId(req);
-        const newUserName = req.body.newUserName;
+        const newUserName = req.body.userName;
 
         if (!newUserName) {
             throw new Error("El nombre de usuario no puede estar vacío");

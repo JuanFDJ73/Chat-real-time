@@ -13,9 +13,8 @@ const getUserDescription = async (req, res) => {
         const doc = await dbRef.get();
 
         if (doc.exists) {
-            console.log("Description: ", doc.data().description);
             const description = doc.data().description || ""; //Si no hay description, return vacio
-            res.status(200).send(description);
+            res.status(200).send({ userDescription: description });
         } else {
             console.log("No se encontró el documento para el usuario:", userId);
             res.status(404).send("No se encontró el documento del usuario");

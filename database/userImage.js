@@ -88,8 +88,9 @@ async function deleteUserImage(req, res) {
         const userId = await tokenUserId(req);
         const currentImageUrl = await getImage(userId);
         if (currentImageUrl) {
-            await deleteDBUserImage(currentImageUrl);
+            await deleteDBUserImage(currentImageUrl);//Elimina de la storage de firebase
         }
+        await db.collection(database).doc(userId).update({ image: null });//Elimina de la base de datos
         res.status(200).json({ message: 'Imagen eliminada' });
     } catch (error) {
         res.status(500).send(error.message);

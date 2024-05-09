@@ -54,7 +54,7 @@ export function apiSearchContacts() {
     });
 }
 
-export function reviewContact(contactId) {
+export function apiAddContact(contactId) {
     fetch('/api/find-contact', {
         method: 'POST',
         body: JSON.stringify({ contactId }),
@@ -66,7 +66,7 @@ export function reviewContact(contactId) {
     .then(data => {
         console.log(data);
         if (data) {
-            console.log('DATA REVIEWCONTACT',data);
+            console.log('DATA AddContact',data);
             apiFunctionClickContactButton(data.contactId, data.img, data.username);
         } else {
             console.log('No se pudo recuperar el contacto');

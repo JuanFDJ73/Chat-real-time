@@ -1,5 +1,5 @@
 import { removeModal } from './modalStructure.js';
-import { reviewContact} from '/apis/contacts.js';
+import { apiAddContact} from '/apis/contacts.js';
 
 export function createFormAddContact() {
     // Obtener el contenido del modal
@@ -61,7 +61,7 @@ export function createFormAddContact() {
             const contacId = input.value
             console.log(contacId);
             //NOTA: Hacer Validaciones, posteriormente cerrar el modal
-            reviewContact(contacId);
+            apiAddContact(contacId);
             input.value = ''
             removeModal();
         } else {

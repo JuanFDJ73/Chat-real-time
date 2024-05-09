@@ -140,6 +140,14 @@ function openImageModal(img) {
     document.body.appendChild(modal);
 }
 
+function chatComplete(){
+    createChatSection();
+    cambiarTitulo(title);
+    changeImgContactHeader(image)
+    cleanSectionChat();
+
+}
+
 export {
     changeImgContactHeader,
     cambiarTitulo,

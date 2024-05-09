@@ -140,22 +140,6 @@
 }
 
 
-/* Modal */
-
-/* Estilos para el fondo oscuro semi-transparente */
-.modal {
-    position: fixed; /* Posicionamiento fijo en la pantalla */
-    top: 0;
-    left: 0;
-    width: 100%; /* Ancho completo */
-    height: 100%; /* Alto completo */
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparente */
-    display: flex;
-    align-items: center; /* Centrado vertical */
-    justify-content: center; /* Centrado horizontal */
-    z-index: 1000; /* Asegura que esté sobre otros elementos */
-}
-
 /* Estilos para el modal */
 .modal {
     position: fixed; /* Posicionamiento fijo en la pantalla */
@@ -195,9 +179,50 @@
     }
 
     & .modal-user.modal-content {
-        width: 40%; 
+        width: 25%; 
+        height: 70%;
     }
 
+    & .uploadForm {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    & .modal-user input[type="file"] {
+        width: 90%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+        display: block;
+    }
+    
+    & .modal-user button[type="submit"] {
+        width: 90%;
+        padding: 10px;
+        margin-top: 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px; 
+        cursor: pointer;
+        font-size: 16px;
+    }
+    
+    & .modal-user button[type="submit"]:hover {
+        background-color: #0056b3; /* Un azul más oscuro para el hover */
+    }
+    
+    & .modal-user .user-profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover; 
+        margin-bottom: 20px;
+    }
     & .label-result{
         color: rgb(192, 0, 0);
         font-size: 0.85em;
@@ -216,7 +241,7 @@
     }
 
     & input[type="text"], button.submit-button {
-        padding: 10px;
+        padding: 6px;
         margin-top: 5px;
     }
 
@@ -241,6 +266,53 @@
         cursor: pointer;
     }
 
+}
+
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 11;
+    display: none;
+}
+
+/* Profile */
+/* Estilos generales */
+.profile-element {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.profile-element input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 250px;
+    font-size: 14px;
+}
+
+.profile-info {
+    margin: 15px 0 0 0;
+}
+
+.upload-label, .delete-button {
+    margin: 5px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.upload-label:hover, .delete-button:hover {
+    background-color: #b30000;
 }
 
 /* Estilos para pantallas pequeñas */
