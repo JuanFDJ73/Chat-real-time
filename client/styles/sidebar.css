@@ -281,7 +281,6 @@
 }
 
 /* Profile */
-/* Estilos generales */
 .profile-element {
     display: flex;
     flex-direction: column;
@@ -297,8 +296,44 @@
     font-size: 14px;
 }
 
-.profile-info {
-    margin: 15px 0 0 0;
+.input-container {
+    position: relative;
+    margin: 25px 0;
+}
+
+.input-container label {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    color: #999;
+    transition: all 0.3s;
+    pointer-events: none;
+}
+
+.input-container input:focus + label,
+.input-container input:valid + label {
+    top: -10px;
+    left: 5px;
+    font-size: 12px;
+    color: #333;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+& .modal-user textarea {
+    width: 90%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+    display: block;
+    box-sizing: border-box;
 }
 
 .upload-label, .delete-button {
@@ -311,8 +346,8 @@
     cursor: pointer;
 }
 
-.upload-label:hover, .delete-button:hover {
-    background-color: #b30000;
+.delete-button {
+    background-color: #333;
 }
 
 /* Estilos para pantallas pequeñas */

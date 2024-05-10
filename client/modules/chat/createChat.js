@@ -153,5 +153,6 @@ export {
     cambiarTitulo,
     cleanSectionChat,
     createChatSection,
-    changeNameContactHeader
+    changeNameContactHeader,
+    openImageModal
 }

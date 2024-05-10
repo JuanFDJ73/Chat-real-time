@@ -1,4 +1,4 @@
-import { apiUpdateUserName, apiUpdateUserDescription, apiUploadImage, apiGetUserDescription, apiGetUserName, apiDeleteUserImage} from "../../apis/userProfile.js";
+import { apiUpdateUserName, apiUpdateUserDescription, apiUploadImage, apiGetUserDescription, apiGetUserName, apiDeleteUserImage } from "../../apis/userProfile.js";
 
 async function createFormProfile() {
     // Obtener el contenido del modal
@@ -32,7 +32,7 @@ async function createFormProfile() {
     var labelInput = document.createElement("label");
     labelInput.htmlFor = "imageInput";
     labelInput.textContent = "Cambiar imagen";
-    labelInput.className = "upload-label"; 
+    labelInput.className = "upload-label";
 
     // Añadir el input y la etiqueta al formulario
     form.appendChild(fileInput);
@@ -58,7 +58,7 @@ async function createFormProfile() {
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Eliminar imagen";
     deleteButton.className = "delete-button";
-    deleteButton.type = "button"; 
+    deleteButton.type = "button";
 
     // Añadir evento para manejar la eliminación de la imagen
     deleteButton.addEventListener('click', function () {
@@ -86,18 +86,20 @@ async function createFormProfile() {
     modalContentDiv.appendChild(profileInfoDiv);
 }
 
-
-
 function createProfileElement(label, value) {
     const div = document.createElement('div');
-    div.classList.add('profile-element');
-    const labelElement = document.createElement('label');
-    labelElement.textContent = label;
+    div.classList.add('input-container');
     const input = document.createElement('input');
     input.type = 'text';
     input.value = value;
-    let timeoutId;
+    input.required = true;
+    const labelElement = document.createElement('label');
+    labelElement.textContent = label;
 
+    div.appendChild(input);
+    div.appendChild(labelElement);
+
+    let timeoutId;
     input.addEventListener('input', function () {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(async () => {
@@ -108,8 +110,7 @@ function createProfileElement(label, value) {
             }
         }, 1500);
     });
-    div.appendChild(labelElement);
-    div.appendChild(input);
+
     return div;
 }
 
