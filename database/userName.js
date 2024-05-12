@@ -22,10 +22,6 @@ const updateDbUserName = async (req, res) => {
         const userId = tokenUserId(req);
         const newUserName = req.body.userName;
 
-        if (!newUserName) {
-            throw new Error("El nombre de usuario no puede estar vacío");
-        }
-
         const dbRef = db.collection(database).doc(userId);
         await dbRef.set({
             username: newUserName

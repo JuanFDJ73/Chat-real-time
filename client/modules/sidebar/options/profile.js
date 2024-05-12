@@ -1,14 +1,19 @@
 import { apiUpdateUserName, apiUpdateUserDescription, apiUploadImage, apiGetUserDescription, apiGetUserName, apiDeleteUserImage } from "../../apis/userProfile.js";
+import { openImageModal } from "../../chat/createChat.js";
 
 async function createFormProfile() {
     // Obtener el contenido del modal
     const modalContentDiv = document.querySelector('.modal-user');
 
     // Crear el formulario
-    var form = document.createElement("form");
+    const form = document.createElement("form");
     form.id = "uploadForm";
     form.className = "uploadForm";
 
+    // Crear contenedor para la imagen
+    const imageContainer = document.createElement('div');
+    imageContainer.className = 'image-container';
+    
     // Añadir imagen del usuario si existe
     const imgUser = document.getElementById('imageUser');
     const userImage = document.createElement('img');
@@ -17,19 +22,26 @@ async function createFormProfile() {
     } else {
         userImage.src = "/static/perfil.png";
     }
+
+    imageContainer.addEventListener('click', function() {
+        openImageModal(userImage.src);
+    });
     userImage.alt = 'User Profile';
     userImage.className = 'user-profile-image';
-    modalContentDiv.appendChild(userImage);
+
+    // Agregar la imagen al contenedor y el contenedor al modal
+    imageContainer.appendChild(userImage);
+    modalContentDiv.appendChild(imageContainer);
 
     // Crear el input para el archivo
-    var fileInput = document.createElement("input");
+    const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.id = "imageInput";
     fileInput.accept = "image/*";
     fileInput.style.display = "none"; // Ocultar input para personalización
 
     // Crear etiqueta personalizada para el input
-    var labelInput = document.createElement("label");
+    const labelInput = document.createElement("label");
     labelInput.htmlFor = "imageInput";
     labelInput.textContent = "Cambiar imagen";
     labelInput.className = "upload-label";
@@ -69,10 +81,9 @@ async function createFormProfile() {
     // Añadir el botón de eliminar al formulario
     form.appendChild(deleteButton);
 
-
     // Agregar el nombre y la descripción del usuario
     const profileNameDiv = createProfileElement('Nombre', await apiGetUserName());
-    const profileDescriptionDiv = createProfileElement('Descripción', await apiGetUserDescription());
+    const profileDescriptionDiv = createProfileElement('Descripción', await apiGetUserDescription(), true);
 
     profileNameDiv.classList.add('profile-element');
     profileDescriptionDiv.classList.add('profile-element');
@@ -86,11 +97,19 @@ async function createFormProfile() {
     modalContentDiv.appendChild(profileInfoDiv);
 }
 
-function createProfileElement(label, value) {
+function createProfileElement(label, value, isTextarea = false) {
     const div = document.createElement('div');
     div.classList.add('input-container');
-    const input = document.createElement('input');
-    input.type = 'text';
+    let input;
+    if (isTextarea) {
+        input = document.createElement('textarea');
+        input.rows = 4;
+        input.maxLength = 100; 
+        input.style.resize = 'none';
+    } else {
+        input = document.createElement('input');
+        input.type = 'text';
+    }
     input.value = value;
     input.required = true;
     const labelElement = document.createElement('label');
@@ -113,6 +132,7 @@ function createProfileElement(label, value) {
 
     return div;
 }
+
 
 function changeImgUser(image) {
     const imgUser = document.getElementById('imageUser');
