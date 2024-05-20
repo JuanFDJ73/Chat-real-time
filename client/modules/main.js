@@ -1,65 +1,64 @@
 import { displayMessage, scrollToBottom } from '/chat/chatInput.js';
-import { userIdVisibilyOff, switchUserIdVisibility} from '/sidebar/userIdView.js';
-import { setCookieUser, cleanCookieContact} from '/apis/cookies.js';
+import { userIdVisibilyOff, switchUserIdVisibility } from '/sidebar/userIdView.js';
+import { setCookieUser, cleanCookieContact } from '/apis/cookies.js';
 import { apiSearchContacts } from '/apis/contacts.js';
-import { setupSocketListeners, socket} from '/socket/socket.js';
+import { setupSocketListeners, socket } from '/socket/socket.js';
 import { handleEscapeKey } from '/utils.js';
-import { createModalStructure } from '/sidebar/options/modalStructure.js';
-import { createFormAddContact } from '/sidebar/options/addContact.js';
-import { createFormProfile } from './sidebar/options/profile.js';
-import { apiGetUserImage } from './apis/userProfile.js';
+import { apiDeleteUserImage, apiGetUserImage } from './apis/userProfile.js';
+import { closeModal, openModal } from './sidebar/options/modal.js';
+import { getUserDescription, loadUserInfo, updateUserDescription } from './sidebar/options/profile.js';
 function initChatApp() {
-    window.onload = function() {
+    window.onload = function () {
         setCookieUser();
         cleanCookieContact();
-        
-        apiSearchContacts();
 
-        userIdVisibilyOff()
+        apiSearchContacts();
         apiGetUserImage();
+
+        userIdVisibilyOff();
+        loadUserInfo();
     };
 
     setupSocketListeners(socket, displayMessage, scrollToBottom);
 
     document.getElementById("toggleVisibilityButton").addEventListener("click", switchUserIdVisibility);
-    
+
     //Cerrar chat, con boton escape
     document.addEventListener('keydown', handleEscapeKey);
-    
-    document.addEventListener('DOMContentLoaded', function() {
+
+    //Abrir modal, Cerrar modal
+    document.addEventListener('DOMContentLoaded', function () {
         const button1 = document.querySelector('.userContainer');
         const button2 = document.querySelector('.addContact');
         const button3 = document.querySelector('.optionsContainer');
         const button4 = document.querySelector('.helpContainer');
-    
-        button1.addEventListener('click', function() {
-            const className = "modal-content modal-user"
-            const title = "Perfil"
-            createModalStructure(className, title);
-            createFormProfile();
-        });
 
-        button2.addEventListener('click', function() {
-            const className = "modal-content modal-add-contact"
-            const title = "Agregar Contacto"
-            createModalStructure(className, title);
-            createFormAddContact();
-        });
+        button1.addEventListener('click', function () {
 
-        button3.addEventListener('click', function() {
-            const className = "modal-content modal-settings"
-            const title = "Configuraciones"
-            createModalStructure(className, title);
+            const userImageElement = document.querySelector('.user-profile-image');
+            userImageElement.addEventListener('click', function () {
+                openImageModal(userImageElement.src);
+            });
 
-        });
+            const deleteImageButton = document.getElementById('deleteImageButton');
+            deleteImageButton.addEventListener('click', async function () {
+                apiDeleteUserImage();            
+            });
 
-        button4.addEventListener('click', function() {
-            const className = "modal-content modal-help"
-            const title = "Ayuda"
-            createModalStructure(className, title);
+            openModal('modal-user');
         });
-        
-    });    
+        document.getElementById('close-button1').addEventListener('click', function () { closeModal('modal-user'); });
+
+        button2.addEventListener('click', function () { openModal('modal-add-contact'); });
+        document.getElementById('close-button2').addEventListener('click', function () { closeModal('modal-add-contact'); });
+
+        button3.addEventListener('click', function () { openModal('modal-settings'); });
+        document.getElementById('close-button3').addEventListener('click', function () { closeModal('modal-settings'); });
+
+        button4.addEventListener('click', function () { openModal('modal-help'); });
+        document.getElementById('close-button4').addEventListener('click', function () { closeModal('modal-help'); });
+    });
+
 }
 
-export { initChatApp };
+initChatApp();

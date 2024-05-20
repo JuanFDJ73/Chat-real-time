@@ -140,6 +140,8 @@
 }
 
 
+
+
 /* Estilos para el modal */
 .modal {
     position: fixed; /* Posicionamiento fijo en la pantalla */
@@ -152,6 +154,8 @@
     align-items: center; 
     justify-content: center;
     z-index: 10; 
+    opacity: 0;
+    pointer-events: none;
 
     /* Estilos para el contenido del modal */
     & .modal-content {
@@ -230,6 +234,10 @@
         text-align: center;
     }
 
+    & input[type="file"]{
+        display: none;
+    }
+
     & input[type="text"], button.submit-button {
         padding: 6px;
         margin-top: 5px;
@@ -257,6 +265,11 @@
         cursor: pointer;
     }
 
+}
+
+.modal--show {
+    opacity: 1;
+    pointer-events: unset;
 }
 
 .notification {
@@ -338,6 +351,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    resize: none;
 }
 
 .upload-label, .delete-button {

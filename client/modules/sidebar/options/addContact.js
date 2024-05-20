@@ -1,4 +1,4 @@
-import { removeModal } from './modalStructure.js';
+import { closeModal } from './modal.js';
 import { apiAddContact} from '/apis/contacts.js';
 
 export function createFormAddContact() {

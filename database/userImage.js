@@ -3,7 +3,6 @@ dotenv.config();
 import { storage } from "../database/db.js";
 import { db } from "../database/db.js";
 import { tokenUserId } from "./cookieUserId.js";
-import { getImage } from "./contactImage.js";
 
 const database = process.env.DB_NAME
 
@@ -14,7 +13,7 @@ const userUploadImage = async (req, res) => {
     }
 
     const userId = tokenUserId(req);
-    const currentImageUrl = await getImage(userId);
+    const currentImageUrl = await getImageDB(userId);
 
     const bucket = storage.bucket(); // Obtener el bucket de Firebase Storage
     const file = bucket.file(req.file.originalname);
@@ -67,10 +66,23 @@ async function updateDbUserImage(userId, imageUrl) {
 const getUserImage = async (req, res) => {
     try {
         const userId = await tokenUserId(req);
-        const img = await getImage(userId);
+        const img = await getImageDB(userId);
         res.status(200).json({ image: img });
     } catch (error) {
         res.status(400).send('Token inválido');
+    }
+}
+
+
+async function getImageDB(userId) {
+    // Obtener la imagen del usuario (sea user o contact) en la base de datos
+    const userRef = db.collection(database).doc(userId);
+    const doc = await userRef.get();
+    if (doc.exists) {
+        console.log(`Image:`, doc.data().image);
+        return doc.data().image;
+    } else {
+        return null;
     }
 }
 
@@ -86,7 +98,7 @@ async function deleteDBUserImage(currentImageUrl) {
 async function deleteUserImage(req, res) {
     try {
         const userId = await tokenUserId(req);
-        const currentImageUrl = await getImage(userId);
+        const currentImageUrl = await getImageDB(userId);
         if (currentImageUrl) {
             await deleteDBUserImage(currentImageUrl);//Elimina de la storage de firebase
         }
@@ -101,6 +113,7 @@ export {
     userUploadImage,
     updateDbUserImage,
     getUserImage,
+    getImageDB,
     deleteUserImage,
-    deleteDBUserImage
+    deleteDBUserImage,
 }
