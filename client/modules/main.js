@@ -4,17 +4,14 @@ import { setCookieUser, cleanCookieContact } from '/apis/cookies.js';
 import { apiSearchContacts } from '/apis/contacts.js';
 import { setupSocketListeners, socket } from '/socket/socket.js';
 import { handleEscapeKey } from '/utils.js';
-import { apiDeleteUserImage, apiGetUserImage } from './apis/userProfile.js';
+import { apiGetUserImage } from './apis/userProfile.js';
 import { closeModal, openModal } from './sidebar/options/modal.js';
-import { getUserDescription, loadUserInfo, updateUserDescription } from './sidebar/options/profile.js';
+import { loadUserInfo, modalCroppie } from './sidebar/options/profile.js';
+
 function initChatApp() {
     window.onload = function () {
         setCookieUser();
-        cleanCookieContact();
-
-        apiSearchContacts();
-        apiGetUserImage();
-
+        cleanCookieContact();  
         userIdVisibilyOff();
         loadUserInfo();
     };
@@ -34,18 +31,8 @@ function initChatApp() {
         const button4 = document.querySelector('.helpContainer');
 
         button1.addEventListener('click', function () {
-
-            const userImageElement = document.querySelector('.user-profile-image');
-            userImageElement.addEventListener('click', function () {
-                openImageModal(userImageElement.src);
-            });
-
-            const deleteImageButton = document.getElementById('deleteImageButton');
-            deleteImageButton.addEventListener('click', async function () {
-                apiDeleteUserImage();            
-            });
-
             openModal('modal-user');
+            modalCroppie()
         });
         document.getElementById('close-button1').addEventListener('click', function () { closeModal('modal-user'); });
 
@@ -58,7 +45,6 @@ function initChatApp() {
         button4.addEventListener('click', function () { openModal('modal-help'); });
         document.getElementById('close-button4').addEventListener('click', function () { closeModal('modal-help'); });
     });
-
 }
 
 initChatApp();

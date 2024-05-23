@@ -1,25 +1,38 @@
-import { apiUpdateUserName, apiUpdateUserDescription, apiGetUserDescription, apiGetUserName } from "../../apis/userProfile.js";
+import { apiSearchContacts } from "../../apis/contacts.js";
+import { apiUpdateUserName, apiUpdateUserDescription, apiGetUserDescription, apiGetUserName, apiUploadImage, apiDeleteUserImage, apiGetUserImage } from "../../apis/userProfile.js";
 import { openImageModal } from "../../chat/createChat.js";
 
-
 async function loadUserInfo() {
+    apiSearchContacts();
+    apiGetUserImage();
     getUserName();
     getUserDescription();
     updateUserName();
     updateUserDescription();
+    deleteImageUser();
+    zoomImgModalUser();
 }
 
-async function uploadImage() {
-
+function zoomImgModalUser() {
+    const userImageElement = document.querySelector('.user-profile-image');
+    userImageElement.addEventListener('click', function () {
+        openImageModal(userImageElement.src);
+    });
 }
 
-document.querySelector('.user-profile-image').addEventListener('click', function () {
-    openImageModal(userImage.src);
-});
-
+function deleteImageUser() {
+    const deleteImageButton = document.getElementById('deleteImageButton');
+    deleteImageButton.addEventListener('click', async function (e) {
+        e.preventDefault();
+        try {
+            await apiDeleteUserImage();
+        } catch (error) {
+            console.error('Error al eliminar la imagen:', error);
+        }
+    });
+}
 
 async function getUserName() {
-    // Buscar primero por el localStorage, sino consultar
     let userName = localStorage.getItem('userName');
     if (!userName) {
         try {
@@ -35,7 +48,6 @@ async function getUserName() {
 }
 
 async function getUserDescription() {
-    // Buscar primero por el localStorage, sino consultar
     let userDescription = localStorage.getItem('userDescription');
     if (!userDescription) {
         try {
@@ -52,11 +64,10 @@ async function getUserDescription() {
 
 function updateUserName() {
     let typingTimer;
-    const typingDelay = 1500; //1.5 segundos
+    const typingDelay = 1500; // 1.5 seconds
 
     const userNameElement = document.getElementById('userName');
     userNameElement.addEventListener('input', () => {
-        //Reiniciar contador
         clearTimeout(typingTimer);
         typingTimer = setTimeout(async () => {
             try {
@@ -68,14 +79,12 @@ function updateUserName() {
     });
 }
 
-
 function updateUserDescription() {
     let typingTimer;
-    const typingDelay = 1500; //1.5 segundos
+    const typingDelay = 1500; // 1.5 seconds
 
     const userDescriptionElement = document.getElementById('userDescription');
     userDescriptionElement.addEventListener('input', () => {
-        //Reiniciar contador
         clearTimeout(typingTimer);
         typingTimer = setTimeout(async () => {
             try {
@@ -97,7 +106,6 @@ function changeImgUser(image) {
         imgUser.src = "/static/perfil.png";
         imgUserModal.src = "/static/perfil.png";
     }
-
 }
 
 function showNotification(message) {
@@ -109,6 +117,70 @@ function showNotification(message) {
     }, 2500);
 }
 
+let croppieInstance;
+function modalCroppie() {
+    //mostrar modal con la imagen seleccionada
+    document.getElementById('imageInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                showCroppieModal(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    //Cerrar modal de edicion (Croppie)
+    document.getElementById('close-croppie').addEventListener('click', function () {
+        closeCroppieModal();
+        resetFileInput();
+    });
+
+    //Funcion Guardar Cambios
+    document.getElementById('save-croppie').addEventListener('click', async function () {
+        const croppieResult = await croppieInstance.result({ type: 'base64', size: 'viewport' });
+        await saveCroppedImage(croppieResult);
+        closeCroppieModal();
+        document.getElementById('modal-user').classList.add('modal--show');
+        resetFileInput();
+    });
+
+    //Funcion Cancelar Cambios
+    document.getElementById('cancel-croppie').addEventListener('click', function () {
+        closeCroppieModal();
+        document.getElementById('modal-user').classList.add('modal--show');
+        resetFileInput();
+    });
+
+    //Mostrar modal de ediccion (Croppie)
+    function showCroppieModal(imageSrc) {
+        document.getElementById('croppie-container').innerHTML = '';
+        document.getElementById('modal-croppie').classList.add('modal--show');
+        document.getElementById('modal-user').classList.remove('modal--show');
+        croppieInstance = new Croppie(document.getElementById('croppie-container'), {
+            url: imageSrc,
+            viewport: { width: 200, height: 200 },
+            boundary: { width: 300, height: 300 },
+            showZoomer: true,
+        });
+    }
+
+    //Cerrar modal de ediccion (Croppie)
+    function closeCroppieModal() {
+        document.getElementById('modal-croppie').classList.remove('modal--show');
+        croppieInstance.destroy();
+    }
+
+    //Funcion para guardar la imagen cortada (Croppie)
+    async function saveCroppedImage(imageBase64) {
+        const formData = new FormData();
+        formData.append('file', imageBase64);
+        await apiUploadImage(formData);
+    }
+}
+
+
 export {
     showNotification,
     changeImgUser,
@@ -117,5 +189,5 @@ export {
     updateUserName,
     updateUserDescription,
     loadUserInfo,
-    uploadImage
-}
+    modalCroppie,
+};

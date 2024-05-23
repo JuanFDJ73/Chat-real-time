@@ -171,7 +171,6 @@
 
     & .modal-add-contact.modal-content {
         width: 20%; 
-        
     }
 
     & .modal-help.modal-content {
@@ -185,6 +184,11 @@
     & .modal-user.modal-content {
         width: 25%; 
         height: 75%;
+    }
+
+    & .modal-croppie .modal-content {
+        width: 30%;
+        height: auto;
     }
 
     & .uploadForm {
@@ -354,7 +358,7 @@
     resize: none;
 }
 
-.upload-label, .delete-button {
+.upload-label, .delete-button, .save-button, .cancel-button {
     padding: 10px;
     margin-top: 10px;
     border: 1px solid #ccc;
@@ -367,16 +371,23 @@
     font-size: 16px; 
 }
 
-.delete-button {
+.delete-button, .cancel-button {
     background-color: #505050
 }
 
-.upload-label:hover {
+.upload-label:hover, .save-button:hover {
     background-color: #0c72e1
 }
 
-.delete-button:hover {
+.delete-button:hover, .cancel-button:hover {
     background-color: #333;
+}
+
+.croppie-controls {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
 }
 
 /* Estilos para pantallas pequeñas */

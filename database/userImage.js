@@ -8,18 +8,20 @@ const database = process.env.DB_NAME
 
 //Route
 const userUploadImage = async (req, res) => {
-    if (!req.file) {
+    const base64String = req.body.file;
+    if (!base64String) {
         return res.status(400).send('No file uploaded.');
     }
 
+    const buffer = Buffer.from(base64String.split(',')[1], 'base64');
     const userId = tokenUserId(req);
     const currentImageUrl = await getImageDB(userId);
 
-    const bucket = storage.bucket(); // Obtener el bucket de Firebase Storage
-    const file = bucket.file(req.file.originalname);
+    const bucket = storage.bucket();
+    const file = bucket.file(`${userId}/${Date.now()}.png`);
     const stream = file.createWriteStream({
         metadata: {
-            contentType: req.file.mimetype
+            contentType: 'image/png'
         }
     });
 
@@ -30,20 +32,12 @@ const userUploadImage = async (req, res) => {
 
     stream.on('finish', async () => {
         try {
-            // Hacer el archivo público
             await file.makePublic();
-
-            // Obtener la URL pública
             const publicUrl = file.publicUrl();
-
-            // Actualizar la imagen en la base de datos
             await updateDbUserImage(userId, publicUrl);
-
-            // Eliminar la imagen anterior, si existe
             if (currentImageUrl) {
                 await deleteDBUserImage(currentImageUrl);
             }
-
             res.status(200).json({ image: publicUrl });
         } catch (error) {
             console.error('Error al actualizar la imagen del user:', error);
@@ -51,7 +45,7 @@ const userUploadImage = async (req, res) => {
         }
     });
 
-    stream.end(req.file.buffer);
+    stream.end(buffer);
 };
 
 async function updateDbUserImage(userId, imageUrl) {

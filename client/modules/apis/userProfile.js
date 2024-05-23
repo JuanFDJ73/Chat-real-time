@@ -120,7 +120,7 @@ async function apiUpdateUserName(userName) {
     });
 }
 
-function apiDeleteUserImage() {
+async function apiDeleteUserImage() {
     fetch('/api/delete-user-image', {
         method: 'DELETE',
         headers: {

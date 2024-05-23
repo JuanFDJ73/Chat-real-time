@@ -9,6 +9,7 @@
   <link rel="stylesheet" type="text/css" href="/chat.css" />
   <link rel="stylesheet" type="text/css" href="/styles.css" />
   <link rel="stylesheet" type="text/css" href="/sidebar.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css">
 </head>
 
 <body>
@@ -44,6 +45,18 @@
   </main>
 
   <div id="notification" class="notification"></div>
+
+  <div id="modal-croppie" class="modal">
+    <div class="modal-content modal-croppie">
+      <span id="close-croppie" class="close-button">×</span>
+      <h2>Edición de imagen</h2>
+      <div id="croppie-container"></div>
+      <div class="croppie-controls">
+        <button id="save-croppie" class="save-button">Guardar cambios</button>
+        <button id="cancel-croppie" class="cancel-button">Eliminar cambios</button>
+      </div>
+    </div>
+  </div>
 
   <div id="modal-user" class="modal">
     <div class="modal-content modal-user">
@@ -104,6 +117,19 @@
     </div>
   </div>
 
+
+  <div id="imageModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" id="closeModalButton">&times;</span>
+      <div id="croppieContainer"></div>
+      <input type="range" id="zoomSlider" min="0" max="1" step="0.01">
+      <button id="saveButton">Guardar cambios</button>
+      <button id="cancelButton">Cancelar cambios</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+  <script src="/path/to/your/profile.js"></script>
   <script type="module" src="./main.js"></script>
 </body>
 
