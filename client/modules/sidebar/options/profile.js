@@ -142,34 +142,35 @@ function modalCroppie() {
     //Cerrar modal de edicion (Croppie)
     document.getElementById('close-croppie').addEventListener('click', function () {
         closeCroppieModal();
-        resetFileInput();
+        document.getElementById('modal-user').classList.add('modal--show');
     });
 
     //Funcion Guardar Cambios
     document.getElementById('save-croppie').addEventListener('click', async function () {
         const croppieResult = await croppieInstance.result({ type: 'base64', size: 'viewport' });
-        await saveCroppedImage(croppieResult);
         closeCroppieModal();
         document.getElementById('modal-user').classList.add('modal--show');
-        resetFileInput();
+        await saveCroppedImage(croppieResult);
     });
 
     //Funcion Cancelar Cambios
     document.getElementById('cancel-croppie').addEventListener('click', function () {
         closeCroppieModal();
         document.getElementById('modal-user').classList.add('modal--show');
-        resetFileInput();
     });
 
     //Mostrar modal de ediccion (Croppie)
     function showCroppieModal(imageSrc) {
-        document.getElementById('croppie-container').innerHTML = '';
         document.getElementById('modal-croppie').classList.add('modal--show');
         document.getElementById('modal-user').classList.remove('modal--show');
-        croppieInstance = new Croppie(document.getElementById('croppie-container'), {
+
+        const croppieContainer = document.getElementById('user-croppie-container');
+        croppieContainer.innerHTML = '';
+
+        croppieInstance = new Croppie(croppieContainer, {
             url: imageSrc,
-            viewport: { width: 200, height: 200 },
-            boundary: { width: 300, height: 300 },
+            viewport: { width: 250, height: 250, type: 'circle' },
+            boundary: { width: 350, height: 350 },
             showZoomer: true,
         });
     }
@@ -177,8 +178,10 @@ function modalCroppie() {
     //Cerrar modal de ediccion (Croppie)
     function closeCroppieModal() {
         document.getElementById('modal-croppie').classList.remove('modal--show');
-        croppieInstance.destroy();
-        croppieInstance = null;
+        if (croppieInstance) {
+            croppieInstance.destroy();
+            croppieInstance = null;
+        }
         resetFileInput();
     }
 
@@ -191,13 +194,19 @@ function modalCroppie() {
 
     //Funcion para guardar la imagen cortada (Croppie)
     async function saveCroppedImage(imageBase64) {
+        const deleteImageButton = document.getElementById('deleteImageButton');
+        deleteImageButton.disabled = true;
+
         const formData = new FormData();
         formData.append('file', imageBase64);
+
         try {
             await apiUploadImage(formData);
             showNotification('Imagen subida correctamente.');
         } catch (error) {
             showNotification('Error al subir la imagen.');
+        } finally {
+            deleteImageButton.disabled = false;
         }
     }
 
@@ -208,6 +217,7 @@ function modalCroppie() {
     }
 }
 
+modalCroppie();
 
 export {
     showNotification,

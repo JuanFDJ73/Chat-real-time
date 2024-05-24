@@ -1,12 +1,10 @@
 import { displayMessage, scrollToBottom } from '/chat/chatInput.js';
 import { userIdVisibilyOff, switchUserIdVisibility } from '/sidebar/userIdView.js';
 import { setCookieUser, cleanCookieContact } from '/apis/cookies.js';
-import { apiSearchContacts } from '/apis/contacts.js';
 import { setupSocketListeners, socket } from '/socket/socket.js';
 import { handleEscapeKey } from '/utils.js';
-import { apiGetUserImage } from './apis/userProfile.js';
 import { closeModal, openModal } from './sidebar/options/modal.js';
-import { loadUserInfo, modalCroppie } from './sidebar/options/profile.js';
+import { loadUserInfo } from './sidebar/options/profile.js';
 
 function initChatApp() {
     window.onload = function () {
@@ -23,27 +21,32 @@ function initChatApp() {
     //Cerrar chat, con boton escape
     document.addEventListener('keydown', handleEscapeKey);
 
-    //Abrir modal, Cerrar modal
-    document.addEventListener('DOMContentLoaded', function () {
-        const button1 = document.querySelector('.userContainer');
-        const button2 = document.querySelector('.addContact');
-        const button3 = document.querySelector('.optionsContainer');
-        const button4 = document.querySelector('.helpContainer');
+    const buttons = {
+        imageUser: document.querySelector('.userContainer'),
+        addContact: document.querySelector('.addContact'),
+        options: document.querySelector('.optionsContainer'),
+        help: document.querySelector('.helpContainer')
+    };
 
-        button1.addEventListener('click', function () {
-            openModal('modal-user');
-            modalCroppie()
+    const modals = {
+        imageUser: document.getElementById('modal-user'),
+        addContact: document.getElementById('modal-add-contact'),
+        options: document.getElementById('modal-settings'),
+        help: document.getElementById('modal-help')
+    };
+
+    //Abrir modal
+    Object.keys(buttons).forEach(key => {
+        buttons[key].addEventListener('click', () => openModal(modals[key]));
+    });
+
+    //Cerrar modal
+    const closeButtons = document.querySelectorAll('.close-button');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = button.closest('.modal');
+            closeModal(modal);
         });
-        document.getElementById('close-button1').addEventListener('click', function () { closeModal('modal-user'); });
-
-        button2.addEventListener('click', function () { openModal('modal-add-contact'); });
-        document.getElementById('close-button2').addEventListener('click', function () { closeModal('modal-add-contact'); });
-
-        button3.addEventListener('click', function () { openModal('modal-settings'); });
-        document.getElementById('close-button3').addEventListener('click', function () { closeModal('modal-settings'); });
-
-        button4.addEventListener('click', function () { openModal('modal-help'); });
-        document.getElementById('close-button4').addEventListener('click', function () { closeModal('modal-help'); });
     });
 }
 

@@ -385,7 +385,7 @@
 
 .croppie-controls {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 100%;
     margin-top: 10px;
 }

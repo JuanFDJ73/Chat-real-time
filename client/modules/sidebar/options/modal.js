@@ -1,20 +1,18 @@
 // Función para abrir un modal específico
-function openModal(modalId) {
-    console.log("Open modal", modalId);
-    document.getElementById(modalId).classList.add('modal--show');
+function openModal(modal) {
+    modal.classList.add('modal--show');
 }
 
 // Función para cerrar un modal específico
-function closeModal(modalId) {
-    console.log("Close modal", modalId);
-    document.getElementById(modalId).classList.remove('modal--show');
+function closeModal(modal) {
+    modal.classList.remove('modal--show');
 }
 
 // Si se hace clic fuera del modal lo cierra
 document.addEventListener('click', function (event) {
-    const modalId = event.target.closest('.modal').id;
-    if (modalId && !event.target.closest('.modal-content')) {
-        closeModal(modalId);
+    const modal = event.target.closest('.modal');
+    if (modal && !event.target.closest('.modal-content')) {
+        closeModal(modal);
     }
 });
 
