@@ -122,7 +122,15 @@ function modalCroppie() {
     //mostrar modal con la imagen seleccionada
     document.getElementById('imageInput').addEventListener('change', function (event) {
         const file = event.target.files[0];
+        //Tamaño de la imagen en bytes
+        const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
         if (file) {
+            if (file.size > MAX_IMAGE_SIZE) {
+                showNotification('La imagen es demasiado grande. El tamaño máximo permitido es de 5 MB.');
+                resetFileInput();
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = function (e) {
                 showCroppieModal(e.target.result);
@@ -170,13 +178,33 @@ function modalCroppie() {
     function closeCroppieModal() {
         document.getElementById('modal-croppie').classList.remove('modal--show');
         croppieInstance.destroy();
+        croppieInstance = null;
+        resetFileInput();
     }
+
+    //Cerrar modal de ediccion (Croppie) al hacer click fuera del modal
+    document.getElementById('modal-croppie').addEventListener('click', function (event) {
+        if (event.target.classList.contains('modal')) {
+            closeCroppieModal();
+        }
+    });
 
     //Funcion para guardar la imagen cortada (Croppie)
     async function saveCroppedImage(imageBase64) {
         const formData = new FormData();
         formData.append('file', imageBase64);
-        await apiUploadImage(formData);
+        try {
+            await apiUploadImage(formData);
+            showNotification('Imagen subida correctamente.');
+        } catch (error) {
+            showNotification('Error al subir la imagen.');
+        }
+    }
+
+    //Borra el contenido de la imagen
+    function resetFileInput() {
+        const fileInput = document.getElementById('imageInput');
+        fileInput.value = '';
     }
 }
 
