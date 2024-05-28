@@ -3,8 +3,9 @@ import { userIdVisibilyOff, switchUserIdVisibility } from '/sidebar/userIdView.j
 import { setCookieUser, cleanCookieContact } from '/apis/cookies.js';
 import { setupSocketListeners, socket } from '/socket/socket.js';
 import { handleEscapeKey } from '/utils.js';
-import { closeModal, openModal } from './sidebar/options/modal.js';
-import { loadUserInfo } from './sidebar/options/profile.js';
+import { closeModal, openModal } from '/sidebar/options/modal.js';
+import { loadUserInfo } from '/sidebar/options/profile.js';
+import { setupAddContactForm } from '/sidebar/options/addContact.js';
 
 function initChatApp() {
     window.onload = function () {
@@ -48,6 +49,8 @@ function initChatApp() {
             closeModal(modal);
         });
     });
+    
+    setupAddContactForm();
 }
 
 initChatApp();

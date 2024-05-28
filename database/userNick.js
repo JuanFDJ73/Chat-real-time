@@ -9,18 +9,23 @@ const database = process.env.DB_NAME
 const dataContact = process.env.DATA_CONTACT
 
 const getUserNick = async (req, res) => {
-    //Obtiene el nombre(nick) que el usuario le dio al contacto
     try {
         const userId = tokenUserId(req);
-        const contactId = tokenContactId(req);
+        const contactId = req.body.contactId;
         const dbRef = db.collection(database).doc(userId).collection(contactId).doc(dataContact)
         const doc = await dbRef.get();
         const nick = doc.data().nick;
-        res.status(200).send(nick);
+        
+        if (nick) {
+            res.status(200).json({ nick });
+        } else {
+            res.status(200).json({ contactId });
+        }
     } catch (error) {
-        res.status(404).send("No se encontró el nick del usuario");
+        res.status(500).json({ message: "Error al obtener el nick del usuario" });
     }
 }
+
 
 const uploadUserNick = async (req, res) => {
     //Actualiza el nombre (nick) que el usuario le dio al contacto

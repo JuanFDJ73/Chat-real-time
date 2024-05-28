@@ -6,7 +6,7 @@ const router = express.Router();
 //USERNICK: Nombre que el usuario le asigno a un contacto
 
 //Obtiene el nick de la base de datos
-router.get('/api/get-user-nick', getUserNick);
+router.post('/api/get-user-nick', getUserNick);
 
 //Actualiza el nick de la base de datos
 router.post('/api/upload-user-nick', uploadUserNick);

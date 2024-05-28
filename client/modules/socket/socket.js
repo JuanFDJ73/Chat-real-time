@@ -4,9 +4,9 @@ import { updateContactButtons } from "../sidebar/button.js";
 export const socket = io();
 
 export function setupSocketListeners(socket, displayMessage, scrollToBottom) {
-    socket.on('chat message', (message, userId, contacId, mensajeId) => {
+    socket.on('chat message', (message, userId, contactId, mensajeId) => {
         displayMessage(message, userId, mensajeId);
         scrollToBottom();
-        updateContactButtons(message, contacId);
+        updateContactButtons(message, userId, contactId);
     });
 }

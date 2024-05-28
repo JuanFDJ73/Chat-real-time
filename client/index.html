@@ -72,11 +72,11 @@
       </form>
       <div class="profile-info">
         <div class="input-container profile-element">
-          <input type="text" id="userName">
+          <input type="text" id="userName" required>
           <label for="userName">Nombre</label>
         </div>
         <div class="input-container profile-element">
-          <textarea rows="4" maxlength="100" id="userDescription"></textarea>
+          <textarea rows="4" maxlength="100" id="userDescription" required></textarea>
           <label for="userDescription">Descripción</label>
         </div>
       </div>
@@ -88,17 +88,17 @@
       <span id="close-button2" class="close-button">×</span>
       <h2>Agregar Contacto</h2>
       <form id="contactForm">
-        <div class="form-group">
-          <label for="formAddContact" id="resultAddContact">Id del usuario:</label>
-          <input type="text" id="formAddContact" placeholder="Escribe el Id">
-          <label for="formAddContact" class="label-result">ﾠ</label>
+        <div class="input-container">
+          <input type="text" id="formAddContact" required>
+          <label for="formAddContact">Id del usuario</label>
+          <span class="error-message" style="color: red; font-size: 12px;"></span>
         </div>
         <div class="form-group">
           <button type="submit" class="submit-button">Enviar</button>
         </div>
       </form>
     </div>
-  </div>
+  </div>  
 
   <div id="modal-settings" class="modal">
     <div class="modal-content modal-settings">

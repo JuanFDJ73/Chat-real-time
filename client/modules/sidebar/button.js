@@ -1,6 +1,7 @@
 import { falseLoading } from '../utils.js';
 import { createChatSection } from '../chat/createChat.js';
 import { apiGetContactImage, apiFunctionClickContactButton } from '../apis/contacts.js';
+import { apiGetNick } from '../apis/contactProfile.js';
 
 //El userId posteriormente se usara mostrar el simbolo del enviado (si fue el ultimo mensaje)
 export async function  createContactButton(message, userId, contactId, usuario) {
@@ -46,9 +47,14 @@ export async function  createContactButton(message, userId, contactId, usuario) 
     document.getElementById('contacts').appendChild(button);
 }
 
-export function updateContactButtons(message, contactId) {
+export async function updateContactButtons(message, userId, contactId) {
     const lastMessage = document.getElementById(`message-${contactId}`);
-    lastMessage.textContent = message
+    if (lastMessage) {
+        lastMessage.textContent = message
+    } else {
+        usuario = await apiGetNick(contactId)
+        createContactButton(message, userId, contactId, usuario)
+    }
 }
 
 export function removeButtonActive() {
@@ -71,8 +77,4 @@ export function removeButtonClicked(button) {
             this.classList.add('clicked');
         });
     });
-}
-
-export function getName() {
-
 }

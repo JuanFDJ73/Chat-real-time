@@ -67,6 +67,7 @@ export function apiAddContact(contactId) {
         console.log(data);
         if (data) {
             console.log('DATA AddContact',data);
+            createChatSection();
             apiFunctionClickContactButton(data.contactId, data.img, data.username);
         } else {
             console.log('No se pudo recuperar el contacto');

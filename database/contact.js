@@ -2,7 +2,7 @@ import { db } from "../database/db.js";
 import dotenv from 'dotenv';
 import NodeCache from 'node-cache';
 import { getLatestMessageDB, getMessage } from './message.js';
-import { getUserNameContact } from './contactName.js';
+import { getUserNickNameContact } from './contactName.js';
 import { tokenUserId } from './cookieUserId.js';
 dotenv.config();
 
@@ -39,7 +39,7 @@ const searchContacts = async (req, res) => {
             const contactId = collection.id;
             const [lastMessage, usuario] = await Promise.all([
                 getLatestMessageDB(userId, contactId),
-                getUserNameContact(userId, contactId)
+                getUserNickNameContact(userId, contactId)
             ]);
             return { userId, contactId, usuario, lastMessage };
         });
