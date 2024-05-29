@@ -1,10 +1,7 @@
 // formulario
-import { apiVerifyUserId, apiVerifyContactId } from '../apis/cookies.js';
-export function handleSubmit(socket) {   
-    const messageInput = document.getElementById('message');  
+export function handleSubmit(socket) {
+    const messageInput = document.getElementById('message');
     try {
-        apiVerifyUserId();
-        apiVerifyContactId();
 
         if (messageInput.value) {
             const userLocal = localStorage.getItem('userId');
@@ -27,9 +24,10 @@ export function handleSubmit(socket) {
         console.error('Ocurrió un error:', error);
     }
 }
-export function displayMessage(message, userId, mensajeId, timestamp) {
+//Falta: Colocar el timestamp del mensaje
+export function displayMessage(message, userId, mensajeId, contactId) {
     const messageContainer = document.getElementById('message-container');
-    console.log ("Pruebas con displayMessage: " , userId);
+    console.log("Pruebas con displayMessage: ", userId);
 
     // Contenedor general para cada mensaje
     const messageElement = document.createElement('div');
@@ -38,7 +36,7 @@ export function displayMessage(message, userId, mensajeId, timestamp) {
     // Botón de opciones del mensaje
     const optionsButton = document.createElement('button');
     optionsButton.classList.add('message-options');
-    optionsButton.innerHTML = '⋮' 
+    optionsButton.innerHTML = '⋮';
 
     // Contenido del mensaje
     const messageContent = document.createElement('div');
@@ -46,6 +44,7 @@ export function displayMessage(message, userId, mensajeId, timestamp) {
 
     // Determinar la alineación del mensaje basado en si el usuario es el emisor o no
     const userLocal = localStorage.getItem('userId');
+    const contactLocal = localStorage.getItem('contactId');
     if (userId === userLocal) {
         messageElement.classList.add('message-right');
         messageContent.classList.add('message-content-right');
@@ -54,12 +53,14 @@ export function displayMessage(message, userId, mensajeId, timestamp) {
         messageContent.classList.add('message-content-left');
     }
 
-    // Agregando elementos al contenedor de mensaje
-    messageElement.appendChild(optionsButton);
-    messageElement.appendChild(messageContent);
+    if (contactId === contactLocal) {
+        // Agregando elementos al contenedor de mensaje
+        messageElement.appendChild(optionsButton);
+        messageElement.appendChild(messageContent);
 
-    // Insertar el nuevo mensaje en el contenedor
-    messageContainer.insertAdjacentElement('afterBegin', messageElement);
+        // Insertar el nuevo mensaje en el contenedor
+        messageContainer.insertAdjacentElement('afterBegin', messageElement);
+    }
 }
 
 
@@ -67,7 +68,7 @@ export function displayMessage(message, userId, mensajeId, timestamp) {
 export function cleanChat() {
     const messageInput = document.getElementById('message');
     const messageContainer = document.getElementById('message-container');
-    if (messageInput){
+    if (messageInput) {
         messageInput.value = '';
         messageContainer.innerHTML = '';
     }
@@ -75,11 +76,11 @@ export function cleanChat() {
 
 export function scrollToBottom() {
     const messageContainer = document.getElementById('message-container');
-    if (messageContainer){
+    if (messageContainer) {
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
 }
 
-function optionMessage(){
+function optionMessage() {
 
 }

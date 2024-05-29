@@ -1,5 +1,5 @@
 import { cleanChat, displayMessage, scrollToBottom } from '../chat/chatInput.js';
-import { changeImgContactHeader, changeNameContactHeader } from '../chat/createChat.js';
+import { changeImgContactHeader, changeNameContactHeader, createChatSection } from '../chat/createChat.js';
 import { createContactButton } from '../sidebar/button.js';
 import { setCookieContact } from './cookies.js';
 
@@ -11,72 +11,81 @@ export function apiFunctionClickContactButton(contactId, img, username) {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
-    .then(messages => {
-        cleanChat();
-        setCookieContact(contactId)
-        changeImgContactHeader(img)
-        changeNameContactHeader(username)
-        // Iterar a través de cada mensaje y mostrarlo
-        messages.forEach(message => {
-            console.log('MENSAJE: ',message)
-            displayMessage(message.texto, message.emisor, message.id, message.timestamp);
-            
+        .then(response => response.json())
+        .then(messages => {
+            cleanChat();
+            setCookieContact(contactId)
+            changeImgContactHeader(img)
+            changeNameContactHeader(username)
+            // Iterar a través de cada mensaje y mostrarlo
+            messages.forEach(message => {
+                console.log('MENSAJE: ', message)
+                displayMessage(message.texto, message.emisor, message.id, message.timestamp);
+
+            });
+            scrollToBottom();
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
-        scrollToBottom();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
 }
 
 export function apiSearchContacts() {
     fetch('/api/searchContacts')
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-        throw new Error('Falló la solicitud al servidor para obtener los contactos.');
-    })
-    .then(data => {
-        if (data && data.length) {
-            data.forEach(users => {
-                console.log('Users, SearchContacts: ',users);
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Falló la solicitud al servidor para obtener los contactos.');
+        })
+        .then(data => {
+            if (data && data.length) {
+                data.forEach(users => {
+                    console.log('Users, SearchContacts: ', users);
 
-                createContactButton(users.lastMessage, users.userId, users.contactId, users.usuario);
-            });
-        } else {
-            console.log('No hay contactos disponibles.');
-        }
-    })
-    .catch(error => {
-        console.error('Error al recuperar los contactos:', error);
-    });
+                    createContactButton(users.lastMessage, users.userId, users.contactId, users.usuario);
+                });
+            } else {
+                console.log('No hay contactos disponibles.');
+            }
+        })
+        .catch(error => {
+            console.error('Error al recuperar los contactos:', error);
+        });
 }
 
-export function apiAddContact(contactId) {
-    fetch('/api/find-contact', {
-        method: 'POST',
-        body: JSON.stringify({ contactId }),
-        headers: {
-            'Content-Type': 'application/json'
+export async function apiAddContact(contactId) {
+    try {
+        const response = await fetch('/api/find-contact', {
+            method: 'POST',
+            body: JSON.stringify({ contactId }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
-    })
-    .then(response => response.json())
-    .then(data => {
+
+        const data = await response.json();
         console.log(data);
+
         if (data) {
-            console.log('DATA AddContact',data);
+            console.log('DATA AddContact', data);
             createChatSection();
             apiFunctionClickContactButton(data.contactId, data.img, data.username);
+
+            return { status: 'success', message: 'Contacto agregado con éxito' };
         } else {
-            console.log('No se pudo recuperar el contacto');
+            return { status: 'error', message: 'El usuario no existe' };
         }
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('Error:', error);
-    });
+        return { status: 'error', message: 'Este usuario no existe' };
+    }
 }
+
 
 export async function apiGetContactImage(contactId) {
     return fetch('/api/get-contact-image', {
@@ -86,17 +95,17 @@ export async function apiGetContactImage(contactId) {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
-        if (!response.ok) {
-          throw new Error('Error al obtener la imagen del usuario');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Imagen del usuario:', data.image);
-        return data.image;
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la imagen del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Imagen del usuario:', data.image);
+            return data.image;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }

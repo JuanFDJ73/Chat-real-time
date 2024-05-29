@@ -27,7 +27,7 @@ export async function  createContactButton(message, userId, contactId, usuario) 
 
     // Crear ultimo chat
     const chatSpan = document.createElement('div');
-    chatSpan.textContent = message.texto; //ultimo mensaje
+    chatSpan.textContent = message.texto || message; //ultimo mensaje
     chatSpan.classList.add('last-message');
     chatSpan.id = `message-${contactId}`;
 
@@ -52,7 +52,7 @@ export async function updateContactButtons(message, userId, contactId) {
     if (lastMessage) {
         lastMessage.textContent = message
     } else {
-        usuario = await apiGetNick(contactId)
+        const usuario = await apiGetNick(contactId)
         createContactButton(message, userId, contactId, usuario)
     }
 }
