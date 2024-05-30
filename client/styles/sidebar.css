@@ -86,7 +86,7 @@
         white-space: nowrap; /* Evitar que el texto se envuelva */
         overflow: hidden; /* Ocultar contenido excedente */
         text-overflow: ellipsis; /* Añadir puntos suspensivos si el contenido excede el ancho disponible */
-        background-color: aquamarine;   
+        /* background-color: aquamarine;    */
     }
     
     & .last-message {
@@ -96,31 +96,38 @@
         width: 15vw;
         margin: 10px 0 0 0;
         text-align: left;
-        background-color: #0c72e1;
+        /* background-color: #0c72e1; */
     }
     
     & .contact-last-message {
         display: flex;
         flex-direction: row;
-        background-color: yellow;
+        /* background-color: yellow; */
         width: 15vw;
+        margin: 5px 0 0;
     }
     
     & .last-message {
-        width: 30px;
-        background-color: yellowgreen;
+        margin: 2px 0 0 2px;
+        /* background-color: yellowgreen; */
     }
 
     & .view {
-        width: 2vw;
-        background-color: crimson;
+        width: 25px;
+        /* background-color: crimson; */
     }
 
     & .view img {
-        width: 100%;
-        height: 100%;
+        width: 20px;
+        height: 20px;
         object-fit: cover;
         object-position: center;
+    }
+
+    & .hidden-view {
+        visibility: hidden;
+        width: 0;
+        height: 0;
     }
 }
 
@@ -197,6 +204,7 @@
 
     & .modal-add-contact.modal-content {
         width: 20%; 
+        min-height: 200px;
     }
 
     & .modal-help.modal-content {
@@ -350,6 +358,7 @@
 .input-container {
     position: relative;
     margin: 25px 0;
+    width: 100%;
 }
 
 .input-container label {
@@ -415,6 +424,18 @@
     justify-content: space-around;
     width: 100%;
     margin-top: 10px;
+}
+
+/* Add contact */
+
+.error-message {
+    color: rgb(255, 0, 0);
+    font-size: 0.85em;
+    margin: 10px 0 10px 0;
+}
+
+.contactForm{
+    width: 65%;
 }
 
 /* Estilos para pantallas pequeñas */

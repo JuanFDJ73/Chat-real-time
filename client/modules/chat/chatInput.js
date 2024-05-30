@@ -44,7 +44,7 @@ export function displayMessage(message, userId, mensajeId, contactId) {
 
     // Determinar la alineación del mensaje basado en si el usuario es el emisor o no
     const userLocal = localStorage.getItem('userId');
-    const contactLocal = localStorage.getItem('contactId');
+    console.log(message);
     if (userId === userLocal) {
         messageElement.classList.add('message-right');
         messageContent.classList.add('message-content-right');
@@ -53,14 +53,12 @@ export function displayMessage(message, userId, mensajeId, contactId) {
         messageContent.classList.add('message-content-left');
     }
 
-    if (contactId === contactLocal) {
-        // Agregando elementos al contenedor de mensaje
-        messageElement.appendChild(optionsButton);
-        messageElement.appendChild(messageContent);
+    // Agregando elementos al contenedor de mensaje
+    messageElement.appendChild(optionsButton);
+    messageElement.appendChild(messageContent);
 
-        // Insertar el nuevo mensaje en el contenedor
-        messageContainer.insertAdjacentElement('afterBegin', messageElement);
-    }
+    // Insertar el nuevo mensaje en el contenedor
+    messageContainer.insertAdjacentElement('afterBegin', messageElement);
 }
 
 

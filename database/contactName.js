@@ -6,15 +6,17 @@ const database = process.env.DB_NAME
 
 //Revisar
 async function getUserNickNameContact(userId, contactId) {
-    //Obtiene el nombre que el usuario le asigno al contacto, Si no tiene, trae el ContactId
+    // Obtiene el nombre que el usuario le asigno al contacto, Si no tiene, trae el ContactId
     const docRef = db.collection(`${database}/${userId}/${contactId}`);
     const docSnapshot = await docRef.get();
-    const nombre = docSnapshot.docs[0].data().nick;
-    if (nombre) {
-        return nombre;
-    } else {
-        return contactId
+    
+    if (!docSnapshot.empty) {
+        const nombre = docSnapshot.docs[0].data().nick;
+        if (nombre) {
+            return nombre;
+        }
     }
+    return contactId;
 }
 
 export {

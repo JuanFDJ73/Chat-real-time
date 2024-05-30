@@ -37,7 +37,7 @@ export async function cleanCookieContact() {
         });
 }
 
-export function apiVerifyUserId() {
+export async function apiVerifyUserId() {
     fetch('/api/verify-user-id')
         .then(response => {
             if (response.ok) {
@@ -51,7 +51,7 @@ export function apiVerifyUserId() {
         })
 }
 
-export function apiVerifyContactId() {
+export async function apiVerifyContactId() {
     fetch('/api/verify-contact-id')
         .then(response => {
             if (response.ok) {

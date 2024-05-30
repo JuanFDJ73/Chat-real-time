@@ -21,21 +21,6 @@
       </section>
       <div id="contacts" class="contacts">
         <!-- Contactos aparecerán aquí -->
-        <!-- <button class="contacts-menu">contacto</button>  Contacto ejemplo-->
-        <button class="contacts-menu" id="contactEjemplo"><img id="image-contactEjemplo"
-            src="https://storage.googleapis.com/chatop-6386b.appspot.com/contactId3%2F1716881178832.png"
-            alt="img contactEjemplo" class="contact-image">
-          <div class="contact-info">
-            <div class="contact-title">contactEjemplo</div>
-            <div class="contact-last-message" id="message-contactEjemplo">
-              <div class="view" id="view">
-                <img src="/static/visto.png" alt="visto">
-              </div>
-              <div class="last-message">Hola</div>
-            </div>
-          </div>
-        </button>
-
       </div>
       <div class="contactOptions">
         <button class="userContainer">
@@ -101,11 +86,11 @@
     <div class="modal-content modal-add-contact">
       <span id="close-button2" class="close-button">×</span>
       <h2>Agregar Contacto</h2>
-      <form id="contactForm">
+      <form id="contactForm" class="contactForm">
         <div class="input-container">
           <input type="text" id="formAddContact" required>
           <label for="formAddContact">Id del usuario</label>
-          <span class="error-message" style="color: red; font-size: 12px;"></span>
+          <span class="error-message"></span>
         </div>
         <div class="form-group">
           <button type="submit" class="submit-button">Enviar</button>
