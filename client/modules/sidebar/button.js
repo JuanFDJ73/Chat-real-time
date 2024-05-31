@@ -39,12 +39,13 @@ async function createContactButton(message, userId, contactId, usuario) {
 
     const userLocal = localStorage.getItem('userId');
     const viewImg = document.createElement('img');
-    const emisor = message.emisor
+    const contenido = message
 
-    if (emisor === userLocal) {
+    if (contenido.emisor === userLocal) {
         viewImg.src = '/static/enviado.png';
         showView(viewDiv)
     } else {
+        viewImg.src = '/static/comunicado.png';
         hiddenView(viewDiv)
     }
     viewImg.alt = 'visto';
@@ -80,28 +81,28 @@ async function createContactButton(message, userId, contactId, usuario) {
 }
 
 
-async function updateContactButtons(message, userId, contactId) {
+async function updateContactButtons(message, userId, contactId, emisor) {
     const lastMessage = document.getElementById(`message-${contactId}`);
     const parentView = document.getElementById(`view-${contactId}`);
     const imgElement = parentView.querySelector('img');
     const userLocal = localStorage.getItem('userId');
 
-    if (lastMessage) {
-        lastMessage.textContent = message;
-        await apiVerifyUserId();
+        if (imgElement) {
+            lastMessage.textContent = message;
+            await apiVerifyUserId();
 
-        if (userId === userLocal) {
-            imgElement.src = '/static/enviado.png';
-            showView(parentView);
-        } else {
-            hiddenView(parentView);
+            if (emisor === userId) {
+                imgElement.src = '/static/enviado.png';
+                showView(parentView);
+            } else {
+                imgElement.src = '/static/comunicado.png';
+                hiddenView(parentView);
         }
     } else {
         const usuario = await apiGetNick(contactId);
-        createContactButton(message, userId, contactId, usuario);
+        createContactButton(message, emisor, contactId, usuario);
     }
 }
-
 function removeButtonActive() {
     const buttons = document.querySelectorAll('.contacts-menu');
 
