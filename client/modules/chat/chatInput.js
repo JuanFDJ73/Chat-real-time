@@ -9,13 +9,13 @@ export function handleSubmit(socket) {
             // Enviar el mensaje
             const messageData = {
                 texto: messageInput.value,
-                emisor: userLocal,
+                userId: userLocal,
                 contactId: contactId
             };
 
             console.log('Enviando mensaje:', messageData);
             // Enviamos el mensaje al servidor
-            socket.emit('chat message', messageData.texto, messageData.emisor, messageData.contactId);
+            socket.emit('chat message', messageData.texto, messageData.userId, messageData.contactId);
             messageInput.value = '';
             scrollToBottom(); // Aseguramos que el scroll se mueva hacia el último mensaje
         }
@@ -25,7 +25,7 @@ export function handleSubmit(socket) {
     }
 }
 //Falta: Colocar el timestamp del mensaje
-export function displayMessage(message, userId, mensajeId, contactId, emisor) {
+export function displayMessage(message, userId, mensajeId, contactId) {
     const messageContainer = document.getElementById('message-container');
     console.log("Pruebas con displayMessage: ", userId);
 
@@ -42,10 +42,10 @@ export function displayMessage(message, userId, mensajeId, contactId, emisor) {
     const messageContent = document.createElement('div');
     messageContent.textContent = message;
 
-    console.log(userId, emisor, message)
     // Determinar la alineación del mensaje basado en si el usuario es el emisor o no
     const userLocal = localStorage.getItem('userId');
-    if (userId === emisor) {
+    console.log(message);
+    if (userId === userLocal) {
         messageElement.classList.add('message-right');
         messageContent.classList.add('message-content-right');
     } else {

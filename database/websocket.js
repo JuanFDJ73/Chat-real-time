@@ -32,7 +32,7 @@ export default function initializeWebSocket(io, db) {
             console.log('Mensaje guardado en Firestore con ID:', docRef.id);
     
             // Enviar el mensaje con la Id
-            io.emit('chat message', message, userId, contactId, docRef.id, nuevoMensaje.emisor);
+            io.emit('chat message', message, userId, contactId, docRef.id);
     
             // Si NO esta bloqueado, guardar el mensaje para el contacto con el mismo Id inicial
             if (!block) {
