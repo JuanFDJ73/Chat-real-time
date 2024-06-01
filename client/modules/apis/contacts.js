@@ -20,7 +20,7 @@ export function apiFunctionClickContactButton(contactId, img, username) {
             // Iterar a través de cada mensaje y mostrarlo
             messages.forEach(message => {
                 console.log('MENSAJE: ', message)
-                displayMessage(message.texto, message.emisor, message.id, message.timestamp);
+                displayMessage(message.texto,  message.id, message.emisor, message.receptor, message.timestamp);
 
             });
             scrollToBottom();

@@ -25,27 +25,23 @@ export function handleSubmit(socket) {
     }
 }
 //Falta: Colocar el timestamp del mensaje
-export function displayMessage(message, userId, mensajeId, contactId) {
+export function displayMessage(message, mensajeId, emisor, receptor) {
     const messageContainer = document.getElementById('message-container');
-    console.log("Pruebas con displayMessage: ", userId);
 
-    // Contenedor general para cada mensaje
     const messageElement = document.createElement('div');
     messageElement.id = mensajeId;
 
-    // Botón de opciones del mensaje
     const optionsButton = document.createElement('button');
     optionsButton.classList.add('message-options');
     optionsButton.innerHTML = '⋮';
 
-    // Contenido del mensaje
     const messageContent = document.createElement('div');
     messageContent.textContent = message;
 
-    // Determinar la alineación del mensaje basado en si el usuario es el emisor o no
     const userLocal = localStorage.getItem('userId');
-    console.log(message);
-    if (userId === userLocal) {
+    const contactLocal = localStorage.getItem('contactId');
+    console.log("Prueba Display", emisor, userLocal, contactLocal);
+    if (emisor === userLocal) {
         messageElement.classList.add('message-right');
         messageContent.classList.add('message-content-right');
     } else {
@@ -53,11 +49,9 @@ export function displayMessage(message, userId, mensajeId, contactId) {
         messageContent.classList.add('message-content-left');
     }
 
-    // Agregando elementos al contenedor de mensaje
     messageElement.appendChild(optionsButton);
     messageElement.appendChild(messageContent);
 
-    // Insertar el nuevo mensaje en el contenedor
     messageContainer.insertAdjacentElement('afterBegin', messageElement);
 }
 
