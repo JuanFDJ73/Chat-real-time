@@ -25,7 +25,7 @@ export function handleSubmit(socket) {
     }
 }
 //Falta: Colocar el timestamp del mensaje
-export function displayMessage(message, mensajeId, emisor, receptor) {
+export function displayMessage(message, mensajeId, emisor, receptor, timestamp) {
     const messageContainer = document.getElementById('message-container');
 
     const messageElement = document.createElement('div');

@@ -1,7 +1,7 @@
 import { cleanChat, displayMessage, scrollToBottom } from '../chat/chatInput.js';
 import { changeImgContactHeader, changeNameContactHeader, createChatSection } from '../chat/createChat.js';
 import { createContactButton } from '../sidebar/button.js';
-import { setCookieContact } from './cookies.js';
+import { apiVerifyUserId, setCookieContact } from './cookies.js';
 
 export function apiFunctionClickContactButton(contactId, img, username) {
     fetch('/api/contact-button', {
@@ -17,10 +17,11 @@ export function apiFunctionClickContactButton(contactId, img, username) {
             setCookieContact(contactId)
             changeImgContactHeader(img)
             changeNameContactHeader(username)
+            apiVerifyUserId();
             // Iterar a través de cada mensaje y mostrarlo
             messages.forEach(message => {
                 console.log('MENSAJE: ', message)
-                displayMessage(message.texto,  message.id, message.emisor, message.receptor, message.timestamp);
+                displayMessage(message.texto, message.id, message.emisor, message.receptor, message.timestamp);
 
             });
             scrollToBottom();
@@ -65,24 +66,22 @@ export async function apiAddContact(contactId) {
         });
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Network response was not ok');
         }
 
         const data = await response.json();
-        console.log(data);
 
-        if (data) {
-            console.log('DATA AddContact', data);
+        if (data && !data.error) {
             createChatSection();
             apiFunctionClickContactButton(data.contactId, data.img, data.username);
-
             return { status: 'success', message: 'Contacto agregado con éxito' };
         } else {
             return { status: 'error', message: 'El usuario no existe' };
         }
     } catch (error) {
         console.error('Error:', error);
-        return { status: 'error', message: 'Este usuario no existe' };
+        return { status: 'error', message: error.message || 'Este usuario no existe' };
     }
 }
 

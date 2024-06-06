@@ -57,15 +57,19 @@ const searchContacts = async (req, res) => {
 const findContactId = async (req, res) => {
     //Busca si el contacto que busca el usuario existe.
     try {
-        const contactId = req.body.contactId
+        const contactId = req.body.contactId;
         console.log("Contact ID received:", contactId);
 
         const usuario = await findContactIdDB(contactId);
-        console.log(usuario);
-        res.status(200).send(usuario);
+        if (usuario) {
+            console.log(usuario);
+            res.status(200).json(usuario);
+        } else {
+            res.status(200).json({ error: 'El usuario no existe' });
+        }
     } catch (error) {
         console.error("Error database: ", error);
-        res.status(500);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 }
 

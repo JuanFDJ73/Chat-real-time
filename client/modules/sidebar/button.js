@@ -2,7 +2,7 @@ import { falseLoading } from '../utils.js';
 import { createChatSection } from '../chat/createChat.js';
 import { apiGetContactImage, apiFunctionClickContactButton } from '../apis/contacts.js';
 import { apiGetNick } from '../apis/contactProfile.js';
-import { apiVerifyContactId, apiVerifyUserId } from '../apis/cookies.js';
+import { apiVerifyUserId } from '../apis/cookies.js';
 
 //El userId posteriormente se usara mostrar el simbolo del enviado (si fue el ultimo mensaje)
 async function createContactButton(message, emisor, receptor, usuario) {
@@ -90,44 +90,50 @@ async function createContactButton(message, emisor, receptor, usuario) {
 
 
 async function updateContactButtons(message, emisor, receptor) {
-    await apiVerifyUserId();
     const userLocal = localStorage.getItem('userId');
 
-    // Verificar si el mensaje es del usuario local o de un contacto
+    console.log("message: ", message, " emisor: ", emisor, " receptor: ", receptor, " userLocal:", userLocal);
+
+    let lastMessageR;
+    let lastMessageE;
+    let parentViewR;
+    let parentViewE;
+
     if (userLocal === emisor) {
         // Mensaje del usuario local
-        const lastMessage = document.getElementById(`message-${receptor}`);
-        if (lastMessage) {
-            lastMessage.textContent = message;
+        lastMessageR = document.getElementById(`message-${receptor}`);
+        if (lastMessageR) {
+            lastMessageR.textContent = message;
         }
-        const parentView = document.getElementById(`view-${receptor}`);
-        if (parentView) {
-            const imgElement = parentView.querySelector('img');
+        parentViewR = document.getElementById(`view-${receptor}`);
+        console.log("parentViewR: ", parentViewR)
+        if (parentViewR) {
+            const imgElement = parentViewR.querySelector('img');
             if (imgElement) {
                 imgElement.src = '/static/enviado.png';
             }
             console.log('1UserId', emisor, " UserLocal", userLocal);
-            showView(parentView);
+            showView(parentViewR);
         }
     } else {
         // Mensaje del contacto
-        const lastMessage = document.getElementById(`message-${emisor}`);
-        if (lastMessage) {
-            lastMessage.textContent = message;
+        lastMessageE = document.getElementById(`message-${emisor}`);
+        if (lastMessageE) {
+            lastMessageE.textContent = message;
         }
-        const parentView = document.getElementById(`view-${emisor}`);
-        if (parentView) {
-            const imgElement = parentView.querySelector('img');
+        parentViewE = document.getElementById(`view-${emisor}`);
+        if (parentViewE) {
+            const imgElement = parentViewE.querySelector('img');
             if (imgElement) {
                 imgElement.src = '/static/comunicado.png';
             }
             console.log('2UserId', emisor, " UserLocal", userLocal);
-            hiddenView(parentView);
+            hiddenView(parentViewE);
         }
     }
 
     // Manejar la ausencia de lastMessage
-    if (!lastMessage) {
+    if (!lastMessageR || lastMessageE) {
         const usuario = await apiGetNick(receptor);
         createContactButton(message, emisor, receptor, usuario);
     }

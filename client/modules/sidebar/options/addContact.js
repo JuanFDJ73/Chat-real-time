@@ -4,9 +4,9 @@ import { apiAddContact } from '/apis/contacts.js';
 function setupAddContactForm() {
     const form = document.getElementById('contactForm');
     const input = document.getElementById('formAddContact');
-    const errorMessage = document.querySelector('.error-message');
+    const errorMessage = document.getElementById('error-message');
 
-    form.addEventListener('submit', async function(e) {
+    form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         if (input.value !== "") {
@@ -29,8 +29,8 @@ function setupAddContactForm() {
             errorMessage.textContent = "El campo no puede estar vacío"; // Mostrar mensaje de error
         }
     });
-    
-    input.addEventListener('input', function() {
+
+    input.addEventListener('input', function () {
         if (input.value !== "") {
             errorMessage.textContent = '';
         }
